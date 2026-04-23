@@ -1,6 +1,6 @@
 module.exports = app => {
 
-    const pickupDays = require("../controllers/item_pickup_day.controller.js");
+    const pickupDays = require("../controllers/pickup_day.controller.js");
     const router = require("express").Router();
 
     router.post("/", pickupDays.create);
@@ -15,5 +15,5 @@ module.exports = app => {
 
     router.delete("/", pickupDays.deleteAll);
 
-    app.use("/api/pickup_days", router);
+    app.use("/api/pickupDays", router);
 }

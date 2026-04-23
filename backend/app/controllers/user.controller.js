@@ -2,7 +2,7 @@ const db = require('../models');
 const User = db.users;
 
 // Create and Save a new User
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     try {
         if(!req.body.firstName || !req.body.lastName) {
             return res.status(400).send({
@@ -19,7 +19,7 @@ exports.create = (req, res) => {
             phoneNumber: req.body.phoneNumber
         })
 
-        res.send(user);
+        res.status(201).send(user);
 
     } catch (err) {
         res.status(500).send({
@@ -46,8 +46,8 @@ exports.findAll = async (req, res) => {
 
 // Find a single User by id 
 exports.findOne = async (req, res) => {
+      const id = req.params.id;
     try {
-        const id = req.params.id;
         const user = await User.findByPk(id);
 
         if (user) {
@@ -67,8 +67,8 @@ exports.findOne = async (req, res) => {
 
 // Update User 
 exports.update = async (req, res) => {
+     const id = req.params.id;
     try {
-        const id = req.params.id;
         const [updated] = await User.update(req.body, {
             where: { id: id }
         });
@@ -87,15 +87,17 @@ exports.update = async (req, res) => {
 
 // Delete User by id
 exports.delete = async (req, res) => {
+    const id = req.params.id;
     try {
-        const id = req.params.id;
         const deleted = await User.destroy({
             where: { id: id }
         });
         if (deleted) {
             return res.status(204).send();
         }
-        throw new Error('User not found');
+        return res.status(404).send({
+            message: `Cannot find User with id=${id}.`
+        });
     } catch (err) {
         res.status(500).send({
             message: err.message ||

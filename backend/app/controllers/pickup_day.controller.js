@@ -12,7 +12,7 @@ exports.create = async (req, res) => {
         const pickupDay = await PickupDay.create({
             name: req.body.name
         });
-        res.send(pickupDay);
+        res.status(201).send(pickupDay);
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error creating pickup day"
@@ -53,8 +53,8 @@ exports.findOne = async (req, res) => {
 
 // Update a PickupDay by id
 exports.update = async (req, res) => {
+    const id = req.params.id;
     try {
-        const id = req.params.id;
         const [updated] = await PickupDay.update(req.body, {
             where: { id: id }
         });
@@ -62,7 +62,9 @@ exports.update = async (req, res) => {
             const updatedPickupDay = await PickupDay.findByPk(id);
             return res.send(updatedPickupDay);
         }
-        throw new Error("Pickup Day not found");
+        return res.status(404).send({
+            message: `Cannot find PickupDay with id=${id}.`
+        });
 
     } catch (err) {
         res.status(500).send({
@@ -73,8 +75,8 @@ exports.update = async (req, res) => {
 
 // Delete a PickupDay by id
 exports.delete = async (req, res) => {
+    const id = req.params.id;
     try {
-        const id = req.params.id;
         const deleted = await PickupDay.destroy({
             where: { id: id }
         });
@@ -83,7 +85,9 @@ exports.delete = async (req, res) => {
                 message: "Pickup Day was deleted successfully!"
             });
         }
-        throw new Error("Pickup Day not found");
+        return res.status(404).send({
+            message: `Cannot find PickupDay with id=${id}.`
+        });
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error deleting pickup day with id=" + id

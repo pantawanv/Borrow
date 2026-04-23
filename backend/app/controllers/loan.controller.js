@@ -1,4 +1,3 @@
-const { act } = require("react");
 const db = require("../models");
 const Loan = db.loans;
 
@@ -19,7 +18,7 @@ exports.create = async (req, res) => {
             actualReturnDate: req.body.actualReturnDate,
             status: req.body.status
         });
-        res.send(loan);
+        res.status(201).send(loan);
 
     } catch (err) {
         res.status(500).send({
@@ -62,8 +61,8 @@ exports.findOne = async (req, res) => {
 
 // Update a Loan by id
 exports.update = async (req, res) => {
+    const id = req.params.id;
     try {   
-        const id = req.params.id;
         const [updated] = await Loan.update(req.body, {
             where: { id: id }
         }); 
@@ -71,7 +70,9 @@ exports.update = async (req, res) => {
             const updatedLoan = await Loan.findByPk(id);
             return res.send(updatedLoan);
         }
-        throw new Error("Loan not found");
+        return res.status(404).send({
+            message: `Cannot find Loan with id=${id}.`
+        });
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error updating loan with id=" + id
@@ -81,8 +82,8 @@ exports.update = async (req, res) => {
 
 // Delete a Loan by id
 exports.delete = async (req, res) => {
+    const id = req.params.id;
     try {
-        const id = req.params.id;
         const deleted = await Loan.destroy({
             where: { id: id }
         });
@@ -91,7 +92,9 @@ exports.delete = async (req, res) => {
                 message: "Loan was deleted successfully!"
             });
         }
-        throw new Error("Loan not found");
+        return res.status(404).send({
+            message: `Cannot find Loan with id=${id}.`
+        });
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error deleting loan with id=" + id

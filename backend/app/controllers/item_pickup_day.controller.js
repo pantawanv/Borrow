@@ -9,24 +9,27 @@ exports.create = async (req, res) => {
                 message: "Item ID and Pickup Day ID can not be empty!"
             });
         }
+
         const itemPickupDay = await ItemPickupDay.create({
             itemId: req.body.itemId,
             pickupDayId: req.body.pickupDayId
         });
-        res.send(itemPickupDay);
-    }
-    catch (err) {
+
+        res.status(201).send(itemPickupDay);
+
+    } catch (err) {
         res.status(500).send({
             message: err.message || "Error creating item pickup day"
         });
     }
-};  
+};
 
 // Retrieve all ItemPickupDays
 exports.findAll = async (req, res) => {
     try {
         const itemPickupDays = await ItemPickupDay.findAll();
         res.send(itemPickupDays);
+
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error retrieving item pickup days"
@@ -34,18 +37,27 @@ exports.findAll = async (req, res) => {
     }
 };
 
-// Find a single ItemPickupDay by id
+// Find a single ItemPickupDay by composite key
 exports.findOne = async (req, res) => {
     try {
-        const id = req.params.id;
-        const itemPickupDay = await ItemPickupDay.findByPk(id);
+        const itemId = req.params.itemId;
+        const pickupDayId = req.params.pickupDayId;
+
+        const itemPickupDay = await ItemPickupDay.findOne({
+            where: {
+                itemId: itemId,
+                pickupDayId: pickupDayId
+            }
+        });
 
         if (!itemPickupDay) {
             return res.status(404).send({
-                message: `Cannot find ItemPickupDay with id=${id}.`
+                message: "ItemPickupDay not found."
             });
         }
+
         res.send(itemPickupDay);
+
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error retrieving item pickup day"
@@ -53,39 +65,65 @@ exports.findOne = async (req, res) => {
     }
 };
 
-// Update an ItemPickupDay by id
+// Update an ItemPickupDay by composite key
 exports.update = async (req, res) => {
+    const itemId = req.params.itemId;
+    const pickupDayId = req.params.pickupDayId;
+
     try {
-        const id = req.params.id;
         const [updated] = await ItemPickupDay.update(req.body, {
-            where: { id: id }
+            where: {
+                itemId: itemId,
+                pickupDayId: pickupDayId
+            }
         });
-        if (updated) {  
-            const updatedItemPickupDay = await ItemPickupDay.findByPk(id);
-            return res.status(200).send(updatedItemPickupDay);
+
+        if (!updated) {
+            return res.status(404).send({
+                message: "ItemPickupDay not found."
+            });
         }
-        throw new Error("ItemPickupDay not found");
+
+        const updatedItemPickupDay = await ItemPickupDay.findOne({
+            where: {
+                itemId: itemId,
+                pickupDayId: pickupDayId
+            }
+        });
+
+        res.send(updatedItemPickupDay);
+
     } catch (err) {
         res.status(500).send({
-            message: err.message || "Error updating item pickup day with id=" + id
+            message: err.message || "Error updating item pickup day"
         });
     }
 };
 
-// Delete an ItemPickupDay by id
+// Delete an ItemPickupDay by composite key
 exports.delete = async (req, res) => {
+    const itemId = req.params.itemId;
+    const pickupDayId = req.params.pickupDayId;
+
     try {
-        const id = req.params.id;
         const deleted = await ItemPickupDay.destroy({
-            where: { id: id }
+            where: {
+                itemId: itemId,
+                pickupDayId: pickupDayId
+            }
         });
-        if (deleted) {
-            return res.status(204).send();
+
+        if (!deleted) {
+            return res.status(404).send({
+                message: "ItemPickupDay not found."
+            });
         }
-        throw new Error("ItemPickupDay not found");
+
+        res.status(204).send();
+
     } catch (err) {
         res.status(500).send({
-            message: err.message || "Error deleting item pickup day with id=" + id
+            message: err.message || "Error deleting item pickup day"
         });
     }
 };
@@ -97,12 +135,14 @@ exports.deleteAll = async (req, res) => {
             where: {},
             truncate: false
         });
-        res.send({ message: `${deleted} ItemPickupDays were deleted successfully!` });
-    }
-    catch (err) {
+
+        res.send({
+            message: `${deleted} ItemPickupDays were deleted successfully!`
+        });
+
+    } catch (err) {
         res.status(500).send({
             message: err.message || "Error deleting all item pickup days"
         });
-    }               
+    }
 };
-

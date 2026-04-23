@@ -15,7 +15,7 @@ exports.create = async (req, res) => {
             pickupTimeId: req.body.pickupTimeId
         });
 
-        res.send(itemPickupTime);
+        res.status(201).send(itemPickupTime);
 
     } catch (err) {
         res.status(500).send({
@@ -29,24 +29,33 @@ exports.findAll = async (req, res) => {
     try {
         const itemPickupTimes = await ItemPickupTime.findAll();
         res.send(itemPickupTimes);
+
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error retrieving item pickup times"
         });
     }
-};  
+};
 
-// Find a single ItemPickupTime by id
+// Find a single ItemPickupTime by composite key
 exports.findOne = async (req, res) => {
     try {
-        const id = req.params.id;
-        const itemPickupTime = await ItemPickupTime.findByPk(id);
+        const itemId = req.params.itemId;
+        const pickupTimeId = req.params.pickupTimeId;
+
+        const itemPickupTime = await ItemPickupTime.findOne({
+            where: {
+                itemId: itemId,
+                pickupTimeId: pickupTimeId
+            }
+        });
 
         if (!itemPickupTime) {
             return res.status(404).send({
-                message: `Cannot find ItemPickupTime with id=${id}.`
+                message: "ItemPickupTime not found."
             });
         }
+
         res.send(itemPickupTime);
 
     } catch (err) {
@@ -56,56 +65,84 @@ exports.findOne = async (req, res) => {
     }
 };
 
-// Update an ItemPickupTime by id
+// Update an ItemPickupTime by composite key
 exports.update = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const [updated] = await ItemPickupTime.update(req.body, {
-            where: { id: id }
-        });
-        if (updated) {
-            const updatedItemPickupTime = await ItemPickupTime.findByPk(id);
-            return res.send(updatedItemPickupTime);
-        }
-        throw new Error("ItemPickupTime not found");
-    } catch (err) {
-        res.status(500).send({
-            message: err.message || "Error updating item pickup time with id=" + id
-        });
-    }   
-};  
+    const itemId = req.params.itemId;
+    const pickupTimeId = req.params.pickupTimeId;
 
-// Delete an ItemPickupTime by id
-exports.delete = async (req, res) => {
     try {
-        const id = req.params.id;
-        const deleted = await ItemPickupTime.destroy({
-            where: { id: id }
+        const [updated] = await ItemPickupTime.update(req.body, {
+            where: {
+                itemId: itemId,
+                pickupTimeId: pickupTimeId
+            }
         });
-        if (deleted) {
-            return res.status(200).send({
-                message: "ItemPickupTime was deleted successfully!"
+
+        if (!updated) {
+            return res.status(404).send({
+                message: "ItemPickupTime not found."
             });
         }
-        throw new Error("ItemPickupTime not found");
+
+        const updatedItemPickupTime = await ItemPickupTime.findOne({
+            where: {
+                itemId: itemId,
+                pickupTimeId: pickupTimeId
+            }
+        });
+
+        res.send(updatedItemPickupTime);
+
     } catch (err) {
         res.status(500).send({
-            message: err.message || "Error deleting item pickup time with id=" + id
+            message: err.message || "Error updating item pickup time"
         });
-    }   
+    }
 };
 
-// Delete all ItemPickupTimes 
+// Delete an ItemPickupTime by composite key
+exports.delete = async (req, res) => {
+    const itemId = req.params.itemId;
+    const pickupTimeId = req.params.pickupTimeId;
+
+    try {
+        const deleted = await ItemPickupTime.destroy({
+            where: {
+                itemId: itemId,
+                pickupTimeId: pickupTimeId
+            }
+        });
+
+        if (!deleted) {
+            return res.status(404).send({
+                message: "ItemPickupTime not found."
+            });
+        }
+
+        res.status(204).send();
+
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Error deleting item pickup time"
+        });
+    }
+};
+
+// Delete all ItemPickupTimes
 exports.deleteAll = async (req, res) => {
     try {
         const deleted = await ItemPickupTime.destroy({
             where: {},
             truncate: false
         });
-        res.send({ message: `${deleted} ItemPickupTimes were deleted successfully!` });
+
+        res.send({
+            message: `${deleted} ItemPickupTimes were deleted successfully!`
+        });
+
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error deleting all item pickup times"
         });
-    }   
+    }
 };

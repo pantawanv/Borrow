@@ -21,7 +21,7 @@ exports.create = async (req, res) => {
             extraNotes: req.body.extraNotes,
             status: req.body.status
         });
-        res.send(item);
+        res.status(201).send(item);
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error creating item"
@@ -63,8 +63,8 @@ exports.findOne = async (req, res) => {
 
 // Update Item
 exports.update = async (req, res) => {
+    const id = req.params.id;
     try {
-        const id = req.params.id;
         const [updated] = await Item.update(req.body, {
             where: { id: id }
         });
@@ -72,7 +72,9 @@ exports.update = async (req, res) => {
             const updatedItem = await Item.findByPk(id);
             return res.status(200).send(updatedItem);
         }
-        throw new Error("Item not found");
+        return res.status(404).send({
+            message: `Cannot find Item with id=${id}.`
+        });
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error updating item with id=" + id
@@ -83,15 +85,19 @@ exports.update = async (req, res) => {
 
 // Delete Item by Id
 exports.delete = async (req, res) => {
+    const id = req.params.id;
     try {
-        const id = req.params.id;
         const deleted = await Item.destroy({
             where: { id: id }
         }); 
         if (deleted) {
-            return res.status(204).send();
+            return res.status(204).send({
+                message: "Item was deleted successfully!"
+            });
         }
-        throw new Error("Item not found");
+        return res.status(404).send({
+            message: `Cannot find Item with id=${id}.`
+        });
     } catch (err) {
         res.status(500).send({
             message: err.message || "Could not delete item with id=" + id
@@ -106,7 +112,9 @@ exports.deleteAll = async (req, res) => {
             where: {},
             truncate: false
         });
-        res.status(204).send();
+        res.status(204).send({
+            message: `${deleted} Items were deleted successfully!`
+        });
     }
     catch (err) {
         res.status(500).send({

@@ -12,7 +12,7 @@ exports.create = async (req, res) => {
     const category = await Category.create({
         name: req.body.name
     });
-    res.send(category);
+    res.status(201).send(category);
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error creating category"
@@ -62,7 +62,9 @@ exports.update = async (req, res) => {
             const updatedCategory = await Category.findByPk(id);
             return res.send(updatedCategory);
         }
-        throw new Error(`Cannot find Category with id=${id}.`);
+        return res.status(404).send({
+            message: `Cannot find Category with id=${id}.`
+        });
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error updating category"
@@ -73,8 +75,8 @@ exports.update = async (req, res) => {
 
 // Delete a Category with the specified id
 exports.delete = async (req, res) => {
+    const id = req.params.id;
     try {
-        const id = req.params.id;
         const deleted = await Category.destroy({
             where: { id: id }
         });
@@ -83,7 +85,9 @@ exports.delete = async (req, res) => {
                 message: "Category was deleted successfully!"
             });
         }
-        throw new Error(`Cannot find Category with id=${id}.`);
+        return res.status(404).send({
+            message: `Cannot find Category with id=${id}.`
+        });
     } catch (err) {
         res.status(500).send({
             message: err.message || "Could not delete category with id=" + id

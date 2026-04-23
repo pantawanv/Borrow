@@ -16,7 +16,7 @@ exports.create = async (req, res) => {
         res.send(image);
 
     } catch (err) {
-        res.status(500).send({
+        res.status(201).status(500).send({
             message: err.message || "Error creating image"
         });
     }
@@ -55,8 +55,9 @@ exports.findOne = async (req, res) => {
 
 // Update an Image by id
 exports.update = async (req, res) => {
+    const id = req.params.id;
     try {
-        const id = req.params.id;
+        
         const [updated] = await Image.update(req.body, {
             where: { id: id }
         });
@@ -64,7 +65,9 @@ exports.update = async (req, res) => {
             const updatedImage = await Image.findByPk(id);
             return res.send(updatedImage);
         }
-        throw new Error("Image not found");
+        return res.status(404).send({
+            message: `Cannot find Image with id=${id}.`
+        });
     }
     catch (err) {
         res.status(500).send({
@@ -75,8 +78,8 @@ exports.update = async (req, res) => {
 
 // Delete an Image by id
 exports.delete = async (req, res) => {
+    const id = req.params.id;
     try {
-        const id = req.params.id;
         const deleted = await Image.destroy({
             where: { id: id }
         });
@@ -85,7 +88,9 @@ exports.delete = async (req, res) => {
                 message: "Image was deleted successfully!"
             });
         }
-        throw new Error("Image not found");
+        return res.status(404).send({
+            message: `Cannot find Image with id=${id}.`
+        });
     }
     catch (err) {
         res.status(500).send({

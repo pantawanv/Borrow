@@ -32,7 +32,16 @@ db.sequelize.authenticate()
     console.log("Failed to connect to the database: " + err.message);
 });
 
-// To do: Add routes here
+//Routes
+require("./app/routes/user.routes.js")(app);
+require("./app/routes/category.routes.js")(app);
+require("./app/routes/item.routes.js")(app);
+require("./app/routes/loan.routes.js")(app);
+require("./app/routes/image.routes.js")(app);
+require("./app/routes/pickup_day.routes.js")(app);
+require("./app/routes/pickup_time.routes.js")(app);
+require("./app/routes/item_pickup_day.routes.js")(app);
+require("./app/routes/item_pickup_time.routes.js")(app);
 
 //Set port, listen for requests
 const PORT = process.env.PORT || 8080;

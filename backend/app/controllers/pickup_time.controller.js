@@ -12,7 +12,7 @@ exports.create = async (req, res) => {
         const pickupTime = await PickupTime.create({
             name: req.body.name
         });
-        res.send(pickupTime);
+        res.status(201).send(pickupTime);
     } catch (err) {
         res.status(500).send({
             message: err.message || "Error creating pickup time"

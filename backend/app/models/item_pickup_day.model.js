@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
         timestamps: false,
+        tableName: "item_pickup_day"
     });
 
     return ItemPickupDay;

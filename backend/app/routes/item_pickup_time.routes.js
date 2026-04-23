@@ -7,13 +7,13 @@ module.exports = app => {
 
     router.get("/", itemPickupTimes.findAll);
 
-    router.get("/:id", itemPickupTimes.findOne);
+  router.get("/:itemId/:pickupTimeId", itemPickupTimes.findOne);
 
-    router.put("/:id", itemPickupTimes.update);
+    router.put("/:itemId/:pickupTimeId", itemPickupTimes.update);
 
-    router.delete("/:id", itemPickupTimes.delete);
+    router.delete("/:itemId/:pickupTimeId", itemPickupTimes.delete);
 
     router.delete("/", itemPickupTimes.deleteAll);
 
-    app.use("/api/item_pickup_times", router);
+    app.use("/api/itemPickupTimes", router);
 }

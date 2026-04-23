@@ -15,5 +15,5 @@ module.exports = app => {
 
     router.delete("/", pickupTimes.deleteAll);
     
-    app.use("/api/pickup_times", router);
+    app.use("/api/pickupTimes", router);
 }
