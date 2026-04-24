@@ -1,20 +1,45 @@
 <script>
 import congratsIcon from "@/assets/images/party-popper.png";
+
 export default {
   name: "",
-  components: {},
+
   data() {
     return {
       congratsIcon,
     };
   },
+
   props: {
     modelValue: Boolean,
+    dialogType: String,
   },
-  computed: {},
-  methods: {},
-  watch: {},
-  emits: ["update:modelValue", "go-to-my-items"],
+
+  emits: ["update:modelValue", "go-to-my-items", "confirm-delete"],
+
+  computed: {
+    dialogTitle() {
+      if (this.dialogType === "update") return "Genstand Opdateret!";
+      if (this.dialogType === "delete") return "Slet Genstand?";
+      return "Genstand Oprettet!";
+    },
+
+    dialogText() {
+      if (this.dialogType === "update") {
+        return "Din genstand er blevet opdateret og ændringerne er gemt.";
+      }
+
+      if (this.dialogType === "delete") {
+        return "Er du sikker på, at du vil slette denne genstand? Denne handling kan ikke fortrydes.";
+      }
+
+      return "Tak fordi du deler din genstand med andre. Den er nu synlig for andre brugere, og du kan administrere den under 'Mine genstande'.";
+    },
+
+    isDelete() {
+      return this.dialogType === "delete";
+    },
+  },
 };
 </script>
 
@@ -25,31 +50,57 @@ export default {
   >
     <v-card class="success-modal pa-6">
       <div class="text-center">
-        <v-card-title class="text-h5">Genstand Oprettet!</v-card-title>
+        <v-card-title class="text-h5">
+          {{ dialogTitle }}
+        </v-card-title>
+
         <v-img
+          v-if="!isDelete"
           :src="congratsIcon"
-          alt="Congratulations Icon"
           contain
           max-width="50"
           class="my-4 mx-auto"
         />
+
         <v-card-text class="text-info">
-          Tak fordi du deler din genstand med andre. Den er nu synlig for andre
-          brugere, og du kan administrere den under "Mine genstande".
+          {{ dialogText }}
         </v-card-text>
 
-        <v-card-actions class="justify-center mt-4">
+        <!-- DELETE -->
+        <v-card-actions v-if="isDelete" class="justify-center mt-4 ga-3">
+          <v-btn
+            color="grey-darken-2"
+            variant="flat"
+            @click="$emit('update:modelValue', false)"
+          >
+            Annuller
+          </v-btn>
+
+          <v-btn
+            color="red-darken-1"
+            variant="flat"
+            @click="
+              $emit('confirm-delete');
+              $emit('update:modelValue', false);
+            "
+          >
+            Slet
+          </v-btn>
+        </v-card-actions>
+
+        <!-- CREATE / UPDATE -->
+        <v-card-actions v-else class="justify-center mt-4">
           <v-btn
             color="green-lighten-1"
             variant="flat"
-            density="comfortable"
             class="confirm-btn"
             @click="
               $emit('update:modelValue', false);
               $emit('go-to-my-items');
             "
-            >Gå til mine genstande</v-btn
           >
+            Gå til mine genstande
+          </v-btn>
         </v-card-actions>
       </div>
     </v-card>
@@ -58,7 +109,7 @@ export default {
 
 <style scoped>
 .success-modal {
-  max-width: 360px;
+  max-width: 380px;
   width: 100%;
   margin: auto;
 }
@@ -71,5 +122,6 @@ export default {
 .text-info {
   font-size: 14px;
   color: white;
+  line-height: 1.5;
 }
 </style>

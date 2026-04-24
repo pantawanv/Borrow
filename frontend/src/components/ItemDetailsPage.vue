@@ -14,15 +14,29 @@ export default {
       editIcon: editIcon,
       pickupDays: [],
       pickupTimes: [],
+      selectedStatus: null,
     };
   },
   async mounted() {
+    this.selectedStatus = this.item.status;
     await this.loadRelations();
   },
   methods: {
     async loadRelations() {
       this.pickupDays = await itemService.getPickupDays(this.item.id);
       this.pickupTimes = await itemService.getPickupTimes(this.item.id);
+    },
+    async updateStatus() {
+      try {
+        await itemService.update(this.item.id, {
+          ...this.item,
+          status: this.selectedStatus,
+        });
+
+        this.item.status = this.selectedStatus;
+      } catch (error) {
+        console.error("Error updating status:", error);
+      }
     },
   },
   computed: {
@@ -38,6 +52,9 @@ export default {
         8: "Andet",
       };
       return categories[this.item.categoryId] || "Ukendt";
+    },
+    isStatusChanged() {
+      return this.selectedStatus !== this.item.status;
     },
   },
   watch: {},
@@ -123,16 +140,28 @@ export default {
         <!-- To do - skift placeholder tekst baseret på genstandens status (tilgængelig, udlånt, reserveret) -->
         <div>
           <p id="item-admin-label">Administrer genstand</p>
-          <v-select
-            aria-labelledby="item-admin-label"
-            placeholder="Tilgængelig"
-            rounded="lg"
-            density="compact"
-            variant="solo"
-            class="select-status"
-            :items="['Tilgængelig', 'Udlånt', 'Inaktiv']"
-          >
-          </v-select>
+
+          <div class="status-row">
+            <v-select
+              v-model="selectedStatus"
+              aria-labelledby="item-admin-label"
+              rounded="lg"
+              density="compact"
+              variant="solo"
+              class="select-status"
+              :items="['Tilgængelig', 'Udlånt', 'Inaktiv']"
+              hide-details
+            />
+
+            <v-btn
+              color="green-darken-1"
+              class="save-status-btn"
+              :disabled="!isStatusChanged"
+              @click="updateStatus"
+            >
+              Gem
+            </v-btn>
+          </div>
         </div>
         <div class="btn-actions">
           <v-btn
@@ -168,6 +197,7 @@ export default {
   padding: 14px;
   border-radius: 14px;
 }
+
 .item-image {
   border-radius: 12px;
   margin: 12px 0;
@@ -176,7 +206,6 @@ export default {
 
 .item-title {
   font-size: 20px;
-
   font-weight: bold;
 }
 
@@ -226,12 +255,37 @@ export default {
 .label {
   color: #bdbaba;
 }
+
 .value {
   font-weight: 500;
 }
 
+.status-row,
+.btn-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.select-status :deep(.v-field),
+.save-status-btn,
+.edit-btn,
+.delete-btn {
+  height: 36px;
+  border-radius: 10px;
+}
+
 .select-status {
   max-width: 200px;
+}
+
+.save-status-btn {
+  min-width: 100px;
+}
+
+.edit-btn,
+.delete-btn {
+  min-width: 120px;
 }
 
 .select-status :deep(input::placeholder) {
@@ -243,13 +297,6 @@ export default {
   background-color: #2a2a2a;
 }
 
-.btn-actions {
-  display: flex;
-  gap: 12px;
-}
-
-.edit-btn {
-}
 .delete-btn {
   color: red;
 }

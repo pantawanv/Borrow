@@ -166,10 +166,7 @@ export default {
             block
             color="green-lighten-1"
             class="text-black"
-            @click="
-              $emit('save-item');
-              showSuccessDialog = true;
-            "
+            @click="$emit('save-item')"
           >
             Bekræft
           </v-btn>

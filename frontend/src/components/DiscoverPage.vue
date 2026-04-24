@@ -12,13 +12,12 @@ export default {
 </script>
 
 <template>
-  <h1 class="poop">💩</h1>
+  <p class="myText">Not implemented yet..</p>
 </template>
 
 <style scoped>
-.poop {
-  font-size: 100px;
+.myText {
+  font-size: 40px;
   text-align: center;
-  margin-top: 50px;
 }
 </style>

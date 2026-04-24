@@ -8,6 +8,7 @@ import MyItems from "./components/MyItems.vue";
 import ItemDetailsPage from "@/components/ItemDetailsPage.vue";
 import DiscoverPage from "@/components/DiscoverPage.vue";
 import { itemService } from "@/services/itemService.js";
+import SuccessDialog from "@/components/SuccessDialog.vue";
 
 export default {
   name: "App",
@@ -21,6 +22,7 @@ export default {
     ConfirmPage,
     MyItems,
     ItemDetailsPage,
+    SuccessDialog,
   },
 
   data() {
@@ -29,6 +31,9 @@ export default {
       currentStep: 1,
       selectedItem: null,
       editingItemId: null,
+      showSuccessDialog: false,
+      dialogType: null,
+      selectedDeleteId: null,
 
       itemForm: {
         ownerUserId: 1,
@@ -58,6 +63,10 @@ export default {
     },
 
     goToBasicInfo() {
+      if (!this.editingItemId) {
+        this.resetForm();
+      }
+
       this.currentPage = "basicInfo";
       this.currentStep = 1;
     },
@@ -140,8 +149,11 @@ export default {
         }
 
         this.resetForm();
+
+        this.dialogType = this.editingItemId ? "update" : "create";
+
         this.editingItemId = null;
-        this.goToMyItems();
+        this.showSuccessDialog = true;
       } catch (error) {
         console.error("Error saving item:", error);
       }
@@ -165,10 +177,19 @@ export default {
       };
     },
 
-    async deleteItem(id) {
+    deleteItem(id) {
+      this.selectedDeleteId = id;
+      this.dialogType = "delete";
+      this.showSuccessDialog = true;
+    },
+
+    async confirmDelete() {
       try {
-        await itemService.delete(id);
+        await itemService.delete(this.selectedDeleteId);
+
         this.selectedItem = null;
+        this.selectedDeleteId = null;
+
         this.goToMyItems();
       } catch (error) {
         console.error("Error deleting item:", error);
@@ -261,6 +282,13 @@ export default {
         @edit-item="editItem"
         @delete-item="deleteItem"
         @go-to-my-items="goToMyItems"
+      />
+
+      <SuccessDialog
+        v-model="showSuccessDialog"
+        :dialogType="dialogType"
+        @go-to-my-items="goToMyItems"
+        @confirm-delete="confirmDelete"
       />
     </v-main>
   </v-app>
