@@ -1,16 +1,36 @@
 <script>
 import ItemPreviewCard from "@/components/ItemPreviewCard.vue";
+import { itemService } from "@/services/itemService.js";
+
 export default {
-  name: "",
   components: {
     ItemPreviewCard,
   },
+
   data() {
-    return {};
+    return {
+      items: [],
+      loading: false,
+    };
   },
-  computed: {},
-  methods: {},
-  watch: {},
+
+  async mounted() {
+    await this.loadItems();
+  },
+
+  methods: {
+    async loadItems() {
+      try {
+        this.loading = true;
+        this.items = await itemService.getAll();
+      } catch (error) {
+        console.error("Failed to load items:", error);
+      } finally {
+        this.loading = false;
+      }
+    },
+  },
+
   emits: ["view-item-details", "go-to-basic-info"],
 };
 </script>
@@ -40,14 +60,8 @@ export default {
     Her kan du se og administrere de genstande, du har tilføjet.
   </p>
   <v-row class="pa-6">
-    <v-col cols="12" md="6" lg="4">
-      <ItemPreviewCard @open="$emit('view-item-details')" />
-    </v-col>
-
-    <v-col cols="12" md="6" lg="4">
-      <div @click="$emit('view-item-details')" class="clickable-card">
-        <ItemPreviewCard />
-      </div>
+    <v-col v-for="item in items" :key="item.id" cols="12" md="6" lg="4">
+      <ItemPreviewCard :item="item" @open="$emit('view-item-details', item)" />
     </v-col>
   </v-row>
 </template>

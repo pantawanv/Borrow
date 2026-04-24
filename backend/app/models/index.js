@@ -110,7 +110,8 @@ db.items.belongsToMany(db.pickupDays, {
     through: db.itemPickupDays,
     foreignKey: "itemId",
     otherKey: "pickupDayId",
-    as: "pickupDays"
+    as: "pickupDays",
+    onDelete: "CASCADE"
 });
 
 db.pickupDays.belongsToMany(db.items, {
@@ -125,7 +126,8 @@ db.items.belongsToMany(db.pickupTimes, {
     through: db.itemPickupTimes,
     foreignKey: "itemId",
     otherKey: "pickupTimeId",
-    as: "pickupTimes"
+    as: "pickupTimes",
+    onDelete: "CASCADE"
 });
 
 db.pickupTimes.belongsToMany(db.items, {

@@ -2,6 +2,8 @@
 import placeholder from "@/assets/images/placeholder.jpg";
 import deleteIcon from "@/assets/images/delete.png";
 import editIcon from "@/assets/images/edit.png";
+import { itemService } from "@/services/itemService";
+
 export default {
   name: "",
   components: {},
@@ -10,12 +12,39 @@ export default {
       imagePlaceholder: placeholder,
       deleteIcon: deleteIcon,
       editIcon: editIcon,
+      pickupDays: [],
+      pickupTimes: [],
     };
   },
-  computed: {},
-  methods: {},
+  async mounted() {
+    await this.loadRelations();
+  },
+  methods: {
+    async loadRelations() {
+      this.pickupDays = await itemService.getPickupDays(this.item.id);
+      this.pickupTimes = await itemService.getPickupTimes(this.item.id);
+    },
+  },
+  computed: {
+    categoryName() {
+      const categories = {
+        1: "Værktøj",
+        2: "Køkken",
+        3: "Elektronik",
+        4: "Udendørs",
+        5: "Sport",
+        6: "Transport",
+        7: "Underholdning",
+        8: "Andet",
+      };
+      return categories[this.item.categoryId] || "Ukendt";
+    },
+  },
   watch: {},
-  emits: ["go-to-my-items"],
+  emits: ["go-to-my-items", "edit-item", "delete-item"],
+  props: {
+    item: Object,
+  },
 };
 </script>
 
@@ -28,14 +57,16 @@ export default {
       <v-img class="item-image" :src="imagePlaceholder" cover />
       <div class="top-text">
         <v-card-title class="item-title pa-0">
-          Navn på genstand her
+          {{ item.name }}
         </v-card-title>
 
-        <v-chip size="small">Status</v-chip>
+        <v-chip size="small">{{ item.status }}</v-chip>
       </div>
-      <v-card-subtitle class="item-subtitle pa-0">Mærke her</v-card-subtitle>
+      <v-card-subtitle class="item-subtitle pa-0">{{
+        item.brand
+      }}</v-card-subtitle>
       <v-card-subtitle class="item-subtitle pa-0"
-        >Antal Gange Udlånt: 3</v-card-subtitle
+        >Antal Gange Udlånt: TO DO</v-card-subtitle
       >
       <v-divider class="my-2" />
       <div class="info-list">
@@ -44,46 +75,49 @@ export default {
             <v-icon>mdi-tag</v-icon>
             Kategori
           </span>
-          <span class="value"> Værktøj</span>
+          <span class="value"> {{ categoryName }}</span>
         </div>
         <div class="info-row">
           <span class="label">
             <v-icon>mdi-star-half-full</v-icon>
             Stand</span
           >
-          <span class="value">God</span>
+          <span class="value"> {{ item.itemCondition }}</span>
         </div>
         <div class="info-row">
           <span class="label">
             <v-icon>mdi-clock-outline</v-icon>
             Maks. Låneperiode</span
           >
-          <span class="value">3 dage</span>
+          <span class="value"> {{ item.maxBorrowDays }} dage</span>
         </div>
         <div class="info-row">
           <span class="label">
             <v-icon>mdi-calendar-month</v-icon>
             Foretrukne afhentningsdage</span
           >
-          <span class="value">Mandag, tirsdag</span>
+          <span class="value">
+            {{ pickupDays.map((day) => day.name).join(", ") }}</span
+          >
         </div>
         <div class="info-row">
           <span class="label">
             <v-icon>mdi-sun-clock-outline</v-icon>
             Foretrukne afhentningstider</span
           >
-          <span class="value">Aften</span>
+          <span class="value">
+            {{ pickupTimes.map((time) => time.name).join(", ") }}</span
+          >
         </div>
         <div class="text-section">
           <p class="section-title">Beskrivelse</p>
           <p class="text-content">
-            Højtryksrenser fra Kärcher til rengøring af terrasser, biler og
-            meget mere.
+            {{ item.description }}
           </p>
         </div>
         <div class="text-section">
           <p class="section-title">Ekstra oplysninger</p>
-          <p class="text-content">Har forskellige dysehoveder</p>
+          <p class="text-content">{{ item.extraNotes }}</p>
         </div>
         <v-divider class="my-2" />
         <!-- To do - skift placeholder tekst baseret på genstandens status (tilgængelig, udlånt, reserveret) -->
@@ -101,11 +135,19 @@ export default {
           </v-select>
         </div>
         <div class="btn-actions">
-          <v-btn color="#2a2a2a" class="edit-btn">
+          <v-btn
+            @click="$emit('edit-item', item)"
+            color="#2a2a2a"
+            class="edit-btn"
+          >
             <v-icon>mdi-pencil-outline</v-icon>
             Rediger
           </v-btn>
-          <v-btn color="#2a2a2a" class="delete-btn">
+          <v-btn
+            @click="$emit('delete-item', item.id)"
+            color="#2a2a2a"
+            class="delete-btn"
+          >
             <v-icon>mdi-delete-outline</v-icon>
             Slet
           </v-btn>

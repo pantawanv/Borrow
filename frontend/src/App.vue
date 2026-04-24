@@ -15,6 +15,7 @@ export default {
     return {
       currentPage: "home",
       currentStep: 1,
+      selectedItem: null,
 
       itemForm: {
         ownerUserId: 1,
@@ -66,11 +67,13 @@ export default {
     goToMyItems() {
       this.currentPage = "myItems";
     },
-    viewItemDetails() {
+    viewItemDetails(item) {
+      this.selectedItem = item;
       this.currentPage = "itemDetails";
     },
     async saveItem() {
       try {
+        // Create item
         const created = await itemService.create({
           ownerUserId: this.itemForm.ownerUserId,
           categoryId: this.itemForm.categoryId,
@@ -82,6 +85,25 @@ export default {
           extraNotes: this.itemForm.extraNotes,
           status: this.itemForm.status,
         });
+
+        const itemId = created.id;
+
+        // Save selected pickup days
+        for (const dayId of this.itemForm.pickupDays) {
+          await itemService.createPickupDay({
+            itemId,
+            pickupDayId: dayId,
+          });
+        }
+
+        // Save selected pickup times
+        for (const timeId of this.itemForm.pickupTimes) {
+          await itemService.createPickupTime({
+            itemId,
+            pickupTimeId: timeId,
+          });
+        }
+
         console.log(created);
 
         this.resetForm();
@@ -105,6 +127,19 @@ export default {
         pickupTimes: [],
         images: [],
       });
+    },
+    async deleteItem(id) {
+      try {
+        await itemService.delete(id);
+        this.selectedItem = null;
+        this.goToMyItems();
+      } catch (error) {
+        console.error("Error deleting item:", error);
+      }
+    },
+    async updateItem(updatedItem) {
+      await itemService.update(updatedItem.id, updatedItem);
+      this.selectedItem = updatedItem;
     },
   },
   watch: {},
@@ -167,6 +202,9 @@ export default {
 
       <ItemDetailsPage
         v-if="currentPage === 'itemDetails'"
+        :item="selectedItem"
+        @edit-item="updateItem"
+        @delete-item="deleteItem"
         @go-to-my-items="goToMyItems"
       />
     </v-main>

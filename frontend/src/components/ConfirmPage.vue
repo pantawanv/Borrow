@@ -39,6 +39,27 @@ export default {
       };
       return map[this.itemForm.maxBorrowDays] || "";
     },
+    pickupDaysLabel() {
+      const map = {
+        1: "Mandag",
+        2: "Tirsdag",
+        3: "Onsdag",
+        4: "Torsdag",
+        5: "Fredag",
+        6: "Lørdag",
+        7: "Søndag",
+      };
+      return this.itemForm.pickupDays.map((id) => map[id]).join(", ");
+    },
+    pickupTimesLabel() {
+      const map = {
+        1: "Morgen (8-12)",
+        2: "Middag (12-17)",
+        3: "Aften (17-21)",
+        4: "Nat (21+)",
+      };
+      return this.itemForm.pickupTimes.map((id) => map[id]).join(", ");
+    },
   },
   methods: {},
   watch: {},
@@ -102,14 +123,14 @@ export default {
             <v-icon>mdi-calendar-month</v-icon>
             Foretrukne afhentningsdage</span
           >
-          <span class="value">{{ itemForm.pickupDays.join(", ") }}</span>
+          <span class="value">{{ pickupDaysLabel }}</span>
         </div>
         <div class="info-row">
           <span class="label">
             <v-icon>mdi-sun-clock-outline</v-icon>
             Foretrukne afhentningstider</span
           >
-          <span class="value">{{ itemForm.pickupTimes.join(", ") }}</span>
+          <span class="value">{{ pickupTimesLabel }}</span>
         </div>
         <div class="text-section">
           <p class="section-title">Beskrivelse</p>

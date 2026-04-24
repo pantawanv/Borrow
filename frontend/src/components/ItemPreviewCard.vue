@@ -1,16 +1,32 @@
 <script>
 import placeholder from "@/assets/images/placeholder.jpg";
+
 export default {
-  name: "",
-  components: {},
+  props: {
+    item: Object,
+  },
+
   data() {
     return {
       imagePlaceholder: placeholder,
+
+      categories: {
+        1: "Værktøj",
+        2: "Køkken",
+        3: "Elektronik",
+        4: "Udendørs",
+        5: "Sport",
+        6: "Transport",
+        7: "Underholdning",
+        8: "Andet",
+      },
     };
   },
-  computed: {},
-  methods: {},
-  watch: {},
+  computed: {
+    categoryName() {
+      return this.categories[this.item.categoryId] || "Ukendt";
+    },
+  },
 };
 </script>
 
@@ -19,16 +35,16 @@ export default {
     <v-img class="item-image" :src="imagePlaceholder" cover />
     <div class="info-content">
       <div class="top-text">
-        <v-card-title class="pa-0"> Navn på genstand her </v-card-title>
+        <v-card-title class="pa-0"> {{ item.name }} </v-card-title>
 
-        <v-chip size="small">Status</v-chip>
+        <v-chip size="small"> {{ item.status }} </v-chip>
       </div>
 
-      <p class="brand-text">Mærke på genstand her</p>
+      <p class="brand-text">{{ item.brand }}</p>
 
       <div class="chip-group">
-        <v-chip size="small">Stand</v-chip>
-        <v-chip size="small">Kategori</v-chip>
+        <v-chip size="small"> {{ item.itemCondition }}</v-chip>
+        <v-chip size="small">{{ categoryName }}</v-chip>
       </div>
     </div>
   </v-card>
