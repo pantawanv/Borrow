@@ -6,7 +6,25 @@ export default {
     Stepper,
   },
   data() {
-    return {};
+    return {
+      categories: [
+        { id: 1, name: "Værktøj" },
+        { id: 2, name: "Køkken" },
+        { id: 3, name: "Elektronik" },
+        { id: 4, name: "Udendørs" },
+        { id: 5, name: "Sport" },
+        { id: 6, name: "Transport" },
+        { id: 7, name: "Underholdning" },
+        { id: 8, name: "Andet" },
+      ],
+      loanPeriods: [
+        { title: "1 dag", value: 1 },
+        { title: "3 dage", value: 3 },
+        { title: "1 uge", value: 7 },
+        { title: "2 uger", value: 14 },
+        { title: "1 måned", value: 30 },
+      ],
+    };
   },
   computed: {},
   methods: {},
@@ -16,6 +34,7 @@ export default {
       type: Number,
       default: 1,
     },
+    itemForm: Object,
   },
   emits: ["go-to-details", "go-to-my-items"],
 };
@@ -40,6 +59,7 @@ export default {
     <!-- Title  -->
     <h4 id="item-title-label" class="title-label">Navn på genstand *</h4>
     <v-text-field
+      v-model="itemForm.name"
       aria-labelledby="item-title-label"
       placeholder="f.eks. Symaskine"
       rounded="lg"
@@ -50,6 +70,7 @@ export default {
     <!-- Brand -->
     <h4 id="item-brand-label" class="title-label">Mærke</h4>
     <v-text-field
+      v-model="itemForm.brand"
       aria-labelledby="item-brand-label"
       placeholder="f.eks. Singer"
       rounded="lg"
@@ -60,27 +81,22 @@ export default {
     <!--  Category -->
     <h4 id="item-category-label" class="title-label">Kategori *</h4>
     <v-select
+      v-model="itemForm.categoryId"
+      :items="categories"
+      item-title="name"
+      item-value="id"
       aria-labelledby="item-category-label"
       placeholder="Vælg"
       rounded="lg"
       density="compact"
       variant="solo"
-      :items="[
-        'Værktøj',
-        'Køkken',
-        'Elektronik',
-        'Udendørs',
-        'Sport',
-        'Transport',
-        'Underholdning',
-        'Andet',
-      ]"
     >
     </v-select>
 
     <!-- Condition  -->
     <h4 id="item-condition-label" class="title-label">Stand *</h4>
     <v-select
+      v-model="itemForm.itemCondition"
       aria-labelledby="item-condition-label"
       placeholder="Vælg"
       rounded="lg"
@@ -93,18 +109,22 @@ export default {
     <!-- Max loan period -->
     <h4 id="item-loan-period-label" class="title-label">Max låneperiode *</h4>
     <v-select
+      v-model="itemForm.maxBorrowDays"
+      :items="loanPeriods"
+      item-title="title"
+      item-value="value"
       aria-labelledby="item-loan-period-label"
       placeholder="Vælg"
       rounded="lg"
       density="compact"
       variant="solo"
-      :items="['1 dag', '3 dage', '1 uge', '2 uger', '1 måned']"
     >
     </v-select>
 
     <!-- Description  -->
     <h4 id="item-description-label" class="title-label">Beskrivelse *</h4>
     <v-textarea
+      v-model="itemForm.description"
       aria-labelledby="item-description-label"
       placeholder="Beskriv genstanden, og evt. om den kommer med ekstra tilbehør."
       rounded="lg"
@@ -132,7 +152,7 @@ export default {
       <v-row justify="center" align="center">
         <v-col cols="6">
           <v-btn block color="grey-darken-4" @click="$emit('go-to-my-items')">
-            Anuller
+            Annuller
           </v-btn>
         </v-col>
 

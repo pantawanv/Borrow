@@ -9,7 +9,11 @@ var corsOptions = {
     origin: 'http://localhost:5173', // Port 5173 is the standard for a Vue app.
 };
 
-app.use(cors(corsOptions));
+/* app.use(cors(corsOptions)); */
+
+app.use(cors({
+  origin: ["http://localhost:3000", "http://localhost:5173"]
+}));
 
 // Parse requests of content-type - application/json
 app.use(express.json());

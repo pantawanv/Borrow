@@ -23,6 +23,7 @@ exports.create = async (req, res) => {
         });
         res.status(201).send(item);
     } catch (err) {
+        console.error(err);
         res.status(500).send({
             message: err.message || "Error creating item"
         });

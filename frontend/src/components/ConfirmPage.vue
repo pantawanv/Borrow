@@ -15,7 +15,31 @@ export default {
       showSuccessDialog: false,
     };
   },
-  computed: {},
+  computed: {
+    categoryLabel() {
+      const map = {
+        1: "Værktøj",
+        2: "Køkken",
+        3: "Elektronik",
+        4: "Udendørs",
+        5: "Sport",
+        6: "Transport",
+        7: "Underholdning",
+        8: "Andet",
+      };
+      return map[this.itemForm.categoryId] || "Ukendt";
+    },
+    loanLabel() {
+      const map = {
+        1: "1 dag",
+        3: "3 dage",
+        7: "1 uge",
+        14: "2 uger",
+        30: "1 måned",
+      };
+      return map[this.itemForm.maxBorrowDays] || "";
+    },
+  },
   methods: {},
   watch: {},
   props: {
@@ -23,8 +47,9 @@ export default {
       type: Number,
       default: 1,
     },
+    itemForm: Object,
   },
-  emits: ["go-to-details", "go-to-my-items"],
+  emits: ["go-to-details", "go-to-my-items", "save-item"],
 };
 </script>
 
@@ -45,8 +70,10 @@ export default {
     <!-- Inner card -->
     <v-card class="item-preview">
       <v-img class="item-image" :src="imagePlaceholder" cover />
-      <v-card-title class="item-title">Højtryksrenser</v-card-title>
-      <v-card-subtitle class="item-subtitle">Kärcher</v-card-subtitle>
+      <v-card-title class="item-title">{{ itemForm.name }}</v-card-title>
+      <v-card-subtitle class="item-subtitle">{{
+        itemForm.brand
+      }}</v-card-subtitle>
       <v-divider class="my-2" />
       <div class="info-list">
         <div class="info-row">
@@ -54,46 +81,47 @@ export default {
             <v-icon>mdi-tag</v-icon>
             Kategori</span
           >
-          <span class="value">Værktøj</span>
+          <span class="value">{{ categoryLabel }}</span>
         </div>
         <div class="info-row">
           <span class="label">
             <v-icon>mdi-star-half-full</v-icon>
             Stand</span
           >
-          <span class="value">God</span>
+          <span class="value">{{ itemForm.itemCondition }}</span>
         </div>
         <div class="info-row">
           <span class="label">
             <v-icon>mdi-clock-outline</v-icon>
             Maks. Låneperiode</span
           >
-          <span class="value">3 dage</span>
+          <span class="value">{{ loanLabel }}</span>
         </div>
         <div class="info-row">
           <span class="label">
             <v-icon>mdi-calendar-month</v-icon>
             Foretrukne afhentningsdage</span
           >
-          <span class="value">Mandag, tirsdag</span>
+          <span class="value">{{ itemForm.pickupDays.join(", ") }}</span>
         </div>
         <div class="info-row">
           <span class="label">
             <v-icon>mdi-sun-clock-outline</v-icon>
             Foretrukne afhentningstider</span
           >
-          <span class="value">Aften</span>
+          <span class="value">{{ itemForm.pickupTimes.join(", ") }}</span>
         </div>
         <div class="text-section">
           <p class="section-title">Beskrivelse</p>
           <p class="text-content truncated">
-            Højtryksrenser fra Kärcher til rengøring af terrasser, biler og
-            meget mere.
+            {{ itemForm.description }}
           </p>
         </div>
         <div class="text-section">
           <p class="section-title">Ekstra oplysninger</p>
-          <p class="text-content truncated">Har forskellige dysehoveder</p>
+          <p class="text-content truncated">
+            {{ itemForm.extraNotes }}
+          </p>
         </div>
       </div>
     </v-card>
@@ -117,7 +145,10 @@ export default {
             block
             color="green-lighten-1"
             class="text-black"
-            @click="showSuccessDialog = true"
+            @click="
+              $emit('save-item');
+              showSuccessDialog = true;
+            "
           >
             Bekræft
           </v-btn>

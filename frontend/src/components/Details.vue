@@ -9,13 +9,34 @@ export default {
     return {};
   },
   computed: {},
-  methods: {},
+  methods: {
+    toggleDay(day) {
+      const index = this.itemForm.pickupDays.indexOf(day);
+
+      if (index === -1) {
+        this.itemForm.pickupDays.push(day);
+      } else {
+        this.itemForm.pickupDays.splice(index, 1);
+      }
+    },
+
+    toggleTime(time) {
+      const index = this.itemForm.pickupTimes.indexOf(time);
+
+      if (index === -1) {
+        this.itemForm.pickupTimes.push(time);
+      } else {
+        this.itemForm.pickupTimes.splice(index, 1);
+      }
+    },
+  },
   watch: {},
   props: {
     currentStep: {
       type: Number,
       default: 1,
     },
+    itemForm: Object,
   },
   emits: ["go-to-basic-info", "go-to-confirm", "go-to-my-items"],
 };
@@ -48,13 +69,55 @@ export default {
     <div role="group" aria-labelledby="item-preferred-pick-up-day-label">
       <v-row>
         <v-col cols="12">
-          <v-btn class="pickup-btn" aria-pressed="false">Mandag</v-btn>
-          <v-btn class="pickup-btn" aria-pressed="false">Tirsdag</v-btn>
-          <v-btn class="pickup-btn" aria-pressed="false">Onsdag</v-btn>
-          <v-btn class="pickup-btn" aria-pressed="false">Torsdag</v-btn>
-          <v-btn class="pickup-btn" aria-pressed="false">Fredag</v-btn>
-          <v-btn class="pickup-btn" aria-pressed="false">Lørdag</v-btn>
-          <v-btn class="pickup-btn" aria-pressed="false">Søndag</v-btn>
+          <v-btn
+            class="pickup-btn"
+            :class="{ selected: itemForm.pickupDays.includes('Mandag') }"
+            @click="toggleDay('Mandag')"
+            :aria-pressed="itemForm.pickupDays.includes('Mandag')"
+            >Mandag</v-btn
+          >
+          <v-btn
+            class="pickup-btn"
+            :class="{ selected: itemForm.pickupDays.includes('Tirsdag') }"
+            @click="toggleDay('Tirsdag')"
+            :aria-pressed="itemForm.pickupDays.includes('Tirsdag')"
+            >Tirsdag</v-btn
+          >
+          <v-btn
+            class="pickup-btn"
+            :class="{ selected: itemForm.pickupDays.includes('Onsdag') }"
+            @click="toggleDay('Onsdag')"
+            :aria-pressed="itemForm.pickupDays.includes('Onsdag')"
+            >Onsdag</v-btn
+          >
+          <v-btn
+            class="pickup-btn"
+            :class="{ selected: itemForm.pickupDays.includes('Torsdag') }"
+            @click="toggleDay('Torsdag')"
+            :aria-pressed="itemForm.pickupDays.includes('Torsdag')"
+            >Torsdag</v-btn
+          >
+          <v-btn
+            class="pickup-btn"
+            :class="{ selected: itemForm.pickupDays.includes('Fredag') }"
+            @click="toggleDay('Fredag')"
+            :aria-pressed="itemForm.pickupDays.includes('Fredag')"
+            >Fredag</v-btn
+          >
+          <v-btn
+            class="pickup-btn"
+            :class="{ selected: itemForm.pickupDays.includes('Lørdag') }"
+            @click="toggleDay('Lørdag')"
+            :aria-pressed="itemForm.pickupDays.includes('Lørdag')"
+            >Lørdag</v-btn
+          >
+          <v-btn
+            class="pickup-btn"
+            :class="{ selected: itemForm.pickupDays.includes('Søndag') }"
+            @click="toggleDay('Søndag')"
+            :aria-pressed="itemForm.pickupDays.includes('Søndag')"
+            >Søndag</v-btn
+          >
         </v-col>
       </v-row>
     </div>
@@ -67,10 +130,40 @@ export default {
     <div role="group" aria-labelledby="item-preferred-pick-up-time-label">
       <v-row>
         <v-col cols="12">
-          <v-btn class="pickup-btn" aria-pressed="false">Morgen (8-12)</v-btn>
-          <v-btn class="pickup-btn" aria-pressed="false">Middag (12-17)</v-btn>
-          <v-btn class="pickup-btn" aria-pressed="false">Aften (17-21)</v-btn>
-          <v-btn class="pickup-btn" aria-pressed="false">Nat (21+)</v-btn>
+          <v-btn
+            class="pickup-btn"
+            :class="{
+              selected: itemForm.pickupTimes.includes('Morgen (8-12)'),
+            }"
+            @click="toggleTime('Morgen (8-12)')"
+            :aria-pressed="itemForm.pickupTimes.includes('Morgen (8-12)')"
+            >Morgen (8-12)</v-btn
+          >
+          <v-btn
+            class="pickup-btn"
+            :class="{
+              selected: itemForm.pickupTimes.includes('Middag (12-17)'),
+            }"
+            @click="toggleTime('Middag (12-17)')"
+            :aria-pressed="itemForm.pickupTimes.includes('Middag (12-17)')"
+            >Middag (12-17)</v-btn
+          >
+          <v-btn
+            class="pickup-btn"
+            :class="{
+              selected: itemForm.pickupTimes.includes('Aften (17-21)'),
+            }"
+            @click="toggleTime('Aften (17-21)')"
+            :aria-pressed="itemForm.pickupTimes.includes('Aften (17-21)')"
+            >Aften (17-21)</v-btn
+          >
+          <v-btn
+            class="pickup-btn"
+            :class="{ selected: itemForm.pickupTimes.includes('Nat (21+)') }"
+            @click="toggleTime('Nat (21+)')"
+            :aria-pressed="itemForm.pickupTimes.includes('Nat (21+)')"
+            >Nat (21+)</v-btn
+          >
         </v-col>
       </v-row>
     </div>
@@ -114,6 +207,7 @@ export default {
       Ekstra noter eller instruktioner
     </h4>
     <v-textarea
+      v-model="itemForm.extraNotes"
       aria-labelledby="item-extra-info-label"
       placeholder="Specielle instruktioner til låneren? F.eks. 'Returnér venligst med opladet batteri'"
       rounded="lg"
@@ -198,6 +292,11 @@ export default {
   box-shadow: none;
   padding: 4px 2px 4px 2px;
   margin: 2px 2px 2px 2px;
+}
+
+.selected {
+  background-color: #4caf50;
+  border-color: #388e3c;
 }
 
 .bottom-bar {

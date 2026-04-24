@@ -7,12 +7,30 @@ import ConfirmPage from "./components/ConfirmPage.vue";
 import MyItems from "./components/MyItems.vue";
 import ItemDetailsPage from "@/components/ItemDetailsPage.vue";
 import DiscoverPage from "@/components/DiscoverPage.vue";
+import { itemService } from "@/services/itemService.js";
+
 export default {
   name: "App",
   data() {
     return {
       currentPage: "home",
       currentStep: 1,
+
+      itemForm: {
+        ownerUserId: 1,
+        categoryId: null,
+        name: "",
+        brand: "",
+        itemCondition: "",
+        maxBorrowDays: "",
+        description: "",
+        extraNotes: "",
+        status: "Tilgængelig",
+
+        pickupDays: [],
+        pickupTimes: [],
+        images: [],
+      },
     };
   },
   components: {
@@ -51,6 +69,43 @@ export default {
     viewItemDetails() {
       this.currentPage = "itemDetails";
     },
+    async saveItem() {
+      try {
+        const created = await itemService.create({
+          ownerUserId: this.itemForm.ownerUserId,
+          categoryId: this.itemForm.categoryId,
+          name: this.itemForm.name,
+          brand: this.itemForm.brand,
+          itemCondition: this.itemForm.itemCondition,
+          maxBorrowDays: this.itemForm.maxBorrowDays,
+          description: this.itemForm.description,
+          extraNotes: this.itemForm.extraNotes,
+          status: this.itemForm.status,
+        });
+        console.log(created);
+
+        this.resetForm();
+        this.goToMyItems();
+      } catch (error) {
+        console.error("Error creating item:", error);
+      }
+    },
+    resetForm() {
+      Object.assign(this.itemForm, {
+        ownerUserId: 1,
+        categoryId: null,
+        name: "",
+        brand: "",
+        itemCondition: "",
+        maxBorrowDays: null,
+        description: "",
+        extraNotes: "",
+        status: "Tilgængelig",
+        pickupDays: [],
+        pickupTimes: [],
+        images: [],
+      });
+    },
   },
   watch: {},
 };
@@ -81,6 +136,7 @@ export default {
       <BasicInfo
         v-if="currentPage === 'basicInfo'"
         :currentStep="currentStep"
+        :itemForm="itemForm"
         @go-to-details="goToDetails"
         @go-to-my-items="goToMyItems"
       />
@@ -88,6 +144,7 @@ export default {
       <Details
         v-if="currentPage === 'details'"
         :currentStep="currentStep"
+        :itemForm="itemForm"
         @go-to-basic-info="goToBasicInfo"
         @go-to-confirm="goToConfirm"
         @go-to-my-items="goToMyItems"
@@ -96,8 +153,10 @@ export default {
       <ConfirmPage
         v-if="currentPage === 'confirm'"
         :currentStep="currentStep"
+        :itemForm="itemForm"
         @go-to-details="goToDetails"
         @go-to-my-items="goToMyItems"
+        @save-item="saveItem"
       />
 
       <MyItems
