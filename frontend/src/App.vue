@@ -11,11 +11,24 @@ import { itemService } from "@/services/itemService.js";
 
 export default {
   name: "App",
+
+  components: {
+    Home,
+    DiscoverPage,
+    BasicInfo,
+    Stepper,
+    Details,
+    ConfirmPage,
+    MyItems,
+    ItemDetailsPage,
+  },
+
   data() {
     return {
       currentPage: "home",
       currentStep: 1,
       selectedItem: null,
+      editingItemId: null,
 
       itemForm: {
         ownerUserId: 1,
@@ -34,100 +47,124 @@ export default {
       },
     };
   },
-  components: {
-    Home,
-    DiscoverPage,
-    BasicInfo,
-    Stepper,
-    Details,
-    ConfirmPage,
-    MyItems,
-    ItemDetailsPage,
-  },
-  computed: {},
+
   methods: {
     goToHome() {
       this.currentPage = "home";
     },
+
     goToDiscover() {
       this.currentPage = "discover";
     },
+
     goToBasicInfo() {
       this.currentPage = "basicInfo";
       this.currentStep = 1;
     },
+
     goToDetails() {
       this.currentPage = "details";
       this.currentStep = 2;
     },
+
     goToConfirm() {
       this.currentPage = "confirm";
       this.currentStep = 3;
     },
+
     goToMyItems() {
       this.currentPage = "myItems";
+      this.editingItemId = null;
     },
+
     viewItemDetails(item) {
       this.selectedItem = item;
       this.currentPage = "itemDetails";
     },
+
     async saveItem() {
       try {
-        // Create item
-        const created = await itemService.create({
-          ownerUserId: this.itemForm.ownerUserId,
-          categoryId: this.itemForm.categoryId,
-          name: this.itemForm.name,
-          brand: this.itemForm.brand,
-          itemCondition: this.itemForm.itemCondition,
-          maxBorrowDays: this.itemForm.maxBorrowDays,
-          description: this.itemForm.description,
-          extraNotes: this.itemForm.extraNotes,
-          status: this.itemForm.status,
-        });
+        let itemId;
 
-        const itemId = created.id;
+        // UPDATE existing item
+        if (this.editingItemId) {
+          await itemService.update(this.editingItemId, {
+            ownerUserId: this.itemForm.ownerUserId,
+            categoryId: this.itemForm.categoryId,
+            name: this.itemForm.name,
+            brand: this.itemForm.brand,
+            itemCondition: this.itemForm.itemCondition,
+            maxBorrowDays: this.itemForm.maxBorrowDays,
+            description: this.itemForm.description,
+            extraNotes: this.itemForm.extraNotes,
+            status: this.itemForm.status,
+          });
 
-        // Save selected pickup days
+          await itemService.deletePickupDays(this.editingItemId);
+          await itemService.deletePickupTimes(this.editingItemId);
+
+          itemId = this.editingItemId;
+        }
+
+        // CREATE new item
+        else {
+          const created = await itemService.create({
+            ownerUserId: this.itemForm.ownerUserId,
+            categoryId: this.itemForm.categoryId,
+            name: this.itemForm.name,
+            brand: this.itemForm.brand,
+            itemCondition: this.itemForm.itemCondition,
+            maxBorrowDays: this.itemForm.maxBorrowDays,
+            description: this.itemForm.description,
+            extraNotes: this.itemForm.extraNotes,
+            status: this.itemForm.status,
+          });
+
+          itemId = created.id;
+        }
+
+        // Save pickup days
         for (const dayId of this.itemForm.pickupDays) {
           await itemService.createPickupDay({
-            itemId,
+            itemId: itemId,
             pickupDayId: dayId,
           });
         }
 
-        // Save selected pickup times
+        // Save pickup times
         for (const timeId of this.itemForm.pickupTimes) {
           await itemService.createPickupTime({
-            itemId,
+            itemId: itemId,
             pickupTimeId: timeId,
           });
         }
 
-        console.log(created);
-
         this.resetForm();
+        this.editingItemId = null;
         this.goToMyItems();
       } catch (error) {
-        console.error("Error creating item:", error);
+        console.error("Error saving item:", error);
       }
     },
+
     resetForm() {
-      Object.assign(this.itemForm, {
+      this.itemForm = {
         ownerUserId: 1,
         categoryId: null,
         name: "",
         brand: "",
         itemCondition: "",
-        maxBorrowDays: null,
+        maxBorrowDays: "",
         description: "",
         extraNotes: "",
         status: "Tilgængelig",
+
         pickupDays: [],
         pickupTimes: [],
         images: [],
-      });
+      };
     },
+
     async deleteItem(id) {
       try {
         await itemService.delete(id);
@@ -137,15 +174,33 @@ export default {
         console.error("Error deleting item:", error);
       }
     },
-    async updateItem(updatedItem) {
-      await itemService.update(updatedItem.id, updatedItem);
-      this.selectedItem = updatedItem;
+
+    async editItem(item) {
+      this.editingItemId = item.id;
+
+      const pickupDays = await itemService.getPickupDays(item.id);
+      const pickupTimes = await itemService.getPickupTimes(item.id);
+
+      this.itemForm = {
+        ownerUserId: item.ownerUserId,
+        categoryId: item.categoryId,
+        name: item.name,
+        brand: item.brand,
+        itemCondition: item.itemCondition,
+        maxBorrowDays: item.maxBorrowDays,
+        description: item.description,
+        extraNotes: item.extraNotes,
+        status: item.status,
+        pickupDays: [],
+        pickupTimes: [],
+        images: [],
+      };
+
+      this.goToBasicInfo();
     },
   },
-  watch: {},
 };
 </script>
-
 <template>
   <v-app>
     <v-app-bar class="app-bar">
@@ -203,7 +258,7 @@ export default {
       <ItemDetailsPage
         v-if="currentPage === 'itemDetails'"
         :item="selectedItem"
-        @edit-item="updateItem"
+        @edit-item="editItem"
         @delete-item="deleteItem"
         @go-to-my-items="goToMyItems"
       />

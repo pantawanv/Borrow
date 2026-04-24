@@ -176,4 +176,32 @@ export const itemService = {
       throw error;
     }
   },
+
+  // Delete pickup day and time 
+ async deletePickupDays(itemId) {
+  const response = await fetch(
+    `${BASE_URL}/${itemId}/pickupDays`,
+    {
+      method: "DELETE",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to delete pickup days");
+  }
+},
+
+async deletePickupTimes(itemId) {
+  const response = await fetch(
+    `${BASE_URL}/${itemId}/pickupTimes`,
+    {
+      method: "DELETE",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to delete pickup times");
+  }
+},
+  
 };

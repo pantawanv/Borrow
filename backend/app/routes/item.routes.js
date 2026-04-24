@@ -24,5 +24,10 @@ module.exports = app => {
   // Delete all
   router.delete("/", items.deleteAll);
 
+  //Delete pickup relations
+  router.delete("/:id/pickupDays", items.deletePickupDays);
+  router.delete("/:id/pickupTimes", items.deletePickupTimes);
+
+
   app.use("/api/items", router);
 };

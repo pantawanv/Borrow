@@ -125,21 +125,21 @@ exports.update = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const [updated] = await Item.update(req.body, {
-      where: { id: id },
-    });
+    const item = await Item.findByPk(id);
 
-    if (updated) {
-      const updatedItem = await Item.findByPk(id);
-      return res.status(200).send(updatedItem);
+    if (!item) {
+      return res.status(404).send({
+        message: `Cannot find Item with id=${id}.`
+      });
     }
 
-    return res.status(404).send({
-      message: `Cannot find Item with id=${id}.`,
-    });
+    await item.update(req.body);
+
+    return res.status(200).send(item);
+
   } catch (err) {
-    res.status(500).send({
-      message: err.message || "Error updating item with id=" + id,
+    return res.status(500).send({
+      message: err.message || "Error updating item"
     });
   }
 };
@@ -188,6 +188,38 @@ exports.delete = async (req, res) => {
     console.error(err);
 
     return res.status(500).send({
+      message: err.message
+    });
+  }
+};
+
+//Delete pickup day relation
+exports.deletePickupDays = async (req, res) => {
+  try {
+    await db.itemPickupDays.destroy({
+      where: { itemId: req.params.id }
+    });
+
+    res.send({ message: "Pickup days deleted" });
+
+  } catch (err) {
+    res.status(500).send({
+      message: err.message
+    });
+  }
+};
+
+//Delete pickup time relation
+exports.deletePickupTimes = async (req, res) => {
+  try {
+    await db.itemPickupTimes.destroy({
+      where: { itemId: req.params.id }
+    });
+
+    res.send({ message: "Pickup times deleted" });
+
+  } catch (err) {
+    res.status(500).send({
       message: err.message
     });
   }
