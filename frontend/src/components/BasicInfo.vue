@@ -56,7 +56,7 @@ export default {
         const reader = new FileReader();
 
         reader.onload = (e) => {
-          this.itemForm.images.unshift(e.target.result);
+          this.itemForm.images = [e.target.result, ...this.itemForm.images];
         };
 
         reader.readAsDataURL(file);
@@ -71,14 +71,14 @@ export default {
         const reader = new FileReader();
 
         reader.onload = (e) => {
-          this.itemForm.images.unshift(e.target.result);
+          this.itemForm.images = [e.target.result, ...this.itemForm.images];
         };
 
         reader.readAsDataURL(file);
       });
     },
     removeImage(index) {
-      this.itemForm.images.splice(index, 1);
+      this.itemForm.images = this.itemForm.images.filter((_, i) => i !== index);
     },
     openImagePreview(img) {
       this.selectedImage = img;
@@ -311,7 +311,10 @@ export default {
       class="mt-4 rounded-lg"
       :show-arrows="itemForm.images.length > 1"
     >
-      <v-carousel-item v-for="(img, index) in itemForm.images" :key="index">
+      <v-carousel-item
+        v-for="(img, index) in itemForm.images"
+        :key="img + index"
+      >
         <v-img
           :src="img"
           cover

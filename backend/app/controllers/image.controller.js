@@ -100,6 +100,26 @@ exports.delete = async (req, res) => {
 
 };
 
+// Delete all Images by itemId
+exports.deleteByItemId = async (req, res) => {
+    const itemId = req.params.itemId;
+
+    try {
+        const deleted = await Image.destroy({
+            where: { itemId: itemId }
+        });
+
+        res.send({
+            message: `${deleted} Images deleted successfully!`
+        });
+
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Error deleting images"
+        });
+    }
+};
+
 // Delete all Images
 exports.deleteAll = async (req, res) => {
     try {

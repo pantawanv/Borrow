@@ -113,6 +113,8 @@ export default {
           await itemService.deletePickupDays(this.editingItemId);
           await itemService.deletePickupTimes(this.editingItemId);
 
+          await imageService.deleteByItemId(this.editingItemId);
+
           itemId = this.editingItemId;
         }
 

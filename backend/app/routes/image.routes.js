@@ -11,9 +11,15 @@ module.exports = app => {
 
     router.put("/:id", images.update);
 
+    // DELETE all images for item
+    router.delete("/item/:itemId", images.deleteByItemId);
+
+    // DELETE one image
     router.delete("/:id", images.delete);
 
+    // DELETE all images
     router.delete("/", images.deleteAll);
 
+    
     app.use("/api/images", router);
 }

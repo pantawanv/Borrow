@@ -15,5 +15,17 @@ export const imageService = {
     }
 
     return await response.json();
-  }
+  },
+
+  async deleteByItemId(itemId) {
+    const response = await fetch(`${BASE_URL}/item/${itemId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete images");
+    }
+
+    return true;
+  },
 };
