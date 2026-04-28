@@ -9,6 +9,7 @@ import ItemDetailsPage from "@/components/ItemDetailsPage.vue";
 import DiscoverPage from "@/components/DiscoverPage.vue";
 import { itemService } from "@/services/itemService.js";
 import SuccessDialog from "@/components/SuccessDialog.vue";
+import { imageService } from "./services/imageService";
 
 export default {
   name: "App",
@@ -145,6 +146,14 @@ export default {
           await itemService.createPickupTime({
             itemId: itemId,
             pickupTimeId: timeId,
+          });
+        }
+
+        // Save images
+        for (const imageUrl of this.itemForm.images) {
+          await imageService.create({
+            itemId: itemId,
+            imageUrl: imageUrl,
           });
         }
 

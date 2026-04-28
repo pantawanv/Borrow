@@ -24,10 +24,125 @@ export default {
         { title: "2 uger", value: 14 },
         { title: "1 måned", value: 30 },
       ],
+
+      uploadedImages: [],
+      showImageDialog: false,
+      selectedImage: "",
+
+      errors: {
+        name: "",
+        categoryId: "",
+        itemCondition: "",
+        maxBorrowDays: "",
+        description: "",
+        images: "",
+      },
     };
   },
   computed: {},
-  methods: {},
+  methods: {
+    openFileDialog() {
+      this.$refs.fileInput.click();
+    },
+    handleFiles(event) {
+      const files = Array.from(event.target.files);
+
+      files.forEach((file) => {
+        if (!file.type.startsWith("image/")) return;
+
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          this.uploadedImages.unshift(e.target.result);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    },
+    handleDrop(event) {
+      const files = Array.from(event.dataTransfer.files);
+
+      files.forEach((file) => {
+        if (!file.type.startsWith("image/")) return;
+
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          this.uploadedImages.unshift(e.target.result);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    },
+    removeImage(index) {
+      this.uploadedImages.splice(index, 1);
+    },
+    openImagePreview(img) {
+      this.selectedImage = img;
+      this.showImageDialog = true;
+    },
+    validate() {
+      let valid = true;
+
+      // Name validation
+      if (!this.itemForm.name?.trim()) {
+        this.errors.name = "Indtast venligst et navn for genstanden.";
+        valid = false;
+      } else {
+        this.errors.name = "";
+      }
+
+      // Category validation
+      if (!this.itemForm.categoryId) {
+        this.errors.categoryId = "Vælg venligst en kategori.";
+        valid = false;
+      } else {
+        this.errors.categoryId = "";
+      }
+
+      // Condition validation
+      if (!this.itemForm.itemCondition) {
+        this.errors.itemCondition = "Vælg venligst stand for genstanden.";
+        valid = false;
+      } else {
+        this.errors.itemCondition = "";
+      }
+
+      // Max borrow days validation
+      if (!this.itemForm.maxBorrowDays) {
+        this.errors.maxBorrowDays = "Vælg venligst en max låneperiode.";
+        valid = false;
+      } else {
+        this.errors.maxBorrowDays = "";
+      }
+
+      // Description validation
+      if (!this.itemForm.description?.trim()) {
+        this.errors.description =
+          "Beskriv venligst genstanden, så låneren ved, hvad de kan forvente.";
+        valid = false;
+      } else {
+        this.errors.description = "";
+      }
+
+      // Images validation
+      if (this.uploadedImages.length === 0) {
+        this.errors.images =
+          "Tilføj venligst mindst ét billede af genstanden, så låneren ved, hvad de kan forvente.";
+        valid = false;
+      } else {
+        this.errors.images = "";
+      }
+
+      return valid;
+    },
+    nextStep() {
+      if (this.validate()) {
+        this.itemForm.images = [...this.uploadedImages];
+        this.$emit("go-to-details");
+      }
+    },
+  },
   watch: {},
   props: {
     currentStep: {
@@ -58,6 +173,9 @@ export default {
 
     <!-- Title  -->
     <h4 id="item-title-label" class="title-label">Navn på genstand *</h4>
+    <div v-if="errors.name" class="error-text">
+      {{ errors.name }}
+    </div>
     <v-text-field
       v-model="itemForm.name"
       aria-labelledby="item-title-label"
@@ -69,6 +187,10 @@ export default {
 
     <!-- Brand -->
     <h4 id="item-brand-label" class="title-label">Mærke</h4>
+    <div v-if="errors.brand" class="error-text">
+      {{ errors.brand }}
+    </div>
+
     <v-text-field
       v-model="itemForm.brand"
       aria-labelledby="item-brand-label"
@@ -80,6 +202,10 @@ export default {
 
     <!--  Category -->
     <h4 id="item-category-label" class="title-label">Kategori *</h4>
+    <div v-if="errors.categoryId" class="error-text">
+      {{ errors.categoryId }}
+    </div>
+
     <v-select
       v-model="itemForm.categoryId"
       :items="categories"
@@ -95,6 +221,9 @@ export default {
 
     <!-- Condition  -->
     <h4 id="item-condition-label" class="title-label">Stand *</h4>
+    <div v-if="errors.itemCondition" class="error-text">
+      {{ errors.itemCondition }}
+    </div>
     <v-select
       v-model="itemForm.itemCondition"
       aria-labelledby="item-condition-label"
@@ -108,6 +237,9 @@ export default {
 
     <!-- Max loan period -->
     <h4 id="item-loan-period-label" class="title-label">Max låneperiode *</h4>
+    <div v-if="errors.maxBorrowDays" class="error-text">
+      {{ errors.maxBorrowDays }}
+    </div>
     <v-select
       v-model="itemForm.maxBorrowDays"
       :items="loanPeriods"
@@ -123,6 +255,9 @@ export default {
 
     <!-- Description  -->
     <h4 id="item-description-label" class="title-label">Beskrivelse *</h4>
+    <div v-if="errors.description" class="error-text">
+      {{ errors.description }}
+    </div>
     <v-textarea
       v-model="itemForm.description"
       aria-labelledby="item-description-label"
@@ -134,18 +269,67 @@ export default {
     />
 
     <!--  Pictures -->
-    <h4 id="item-pictures-label" class="title-label">Billeder *</h4>
-    <v-card>
-      <v-card-text
-        class="d-flex align-center justify-center"
-        style="height: 150px"
-      >
-        <div class="image-content">
-          <v-icon size="48" color="grey">mdi-camera-plus</v-icon>
-          <p>Klik for at tilføje billeder</p>
-        </div>
-      </v-card-text>
+    <h4 class="title-label">Billeder *</h4>
+    <div v-if="errors.images" class="error-text">
+      {{ errors.images }}
+    </div>
+    <v-card
+      class="upload-card"
+      flat
+      @click="openFileDialog"
+      @dragover.prevent
+      @drop.prevent="handleDrop"
+    >
+      <div class="image-content">
+        <v-icon size="48">mdi-camera-plus</v-icon>
+        <p>Tryk her for at tilføje billeder</p>
+      </div>
+
+      <input
+        ref="fileInput"
+        type="file"
+        multiple
+        accept="image/*"
+        style="display: none"
+        @change="handleFiles"
+      />
     </v-card>
+
+    <!-- Preview -->
+    <v-carousel
+      v-if="uploadedImages.length"
+      hide-delimiters
+      height="260"
+      class="mt-4 rounded-lg"
+    >
+      <v-carousel-item v-for="(img, index) in uploadedImages" :key="index">
+        <v-img
+          :src="img"
+          cover
+          height="260"
+          class="clickable-image"
+          @click="openImagePreview(img)"
+        />
+        <div class="carousel-actions">
+          <v-btn icon color="red" size="small" @click.stop="removeImage(index)">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </div>
+      </v-carousel-item>
+    </v-carousel>
+
+    <!-- Image dialog -->
+
+    <v-dialog v-model="showImageDialog" max-width="900">
+      <v-card>
+        <v-img :src="selectedImage" contain max-height="80vh" />
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text @click="showImageDialog = false"> Luk </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- Back and next buttons  -->
     <div class="bottom-bar">
@@ -161,7 +345,7 @@ export default {
             block
             color="green-lighten-1"
             class="text-black"
-            @click="$emit('go-to-details')"
+            @click="nextStep"
           >
             Næste
           </v-btn>
@@ -205,10 +389,52 @@ export default {
 }
 
 .image-content {
+  height: 160px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  color: grey;
+}
+
+.upload-card {
+  border: 2px dashed grey;
+  min-height: 160px;
   cursor: pointer;
+  border-radius: 16px;
+}
+
+.preview-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.preview-box {
+  position: relative;
+  width: 120px;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+.carousel-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px;
+}
+
+.clickable-image {
+  cursor: pointer;
+}
+
+.error-text {
+  color: rgb(202, 20, 20);
+  font-size: 14px;
+  margin-top: -16px;
+  margin-bottom: 8px;
 }
 </style>

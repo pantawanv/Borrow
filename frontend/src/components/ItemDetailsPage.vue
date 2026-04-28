@@ -56,6 +56,11 @@ export default {
     isStatusChanged() {
       return this.selectedStatus !== this.item.status;
     },
+    mainImage() {
+      return this.item.images?.length
+        ? this.item.images[0].imageUrl
+        : this.imagePlaceholder;
+    },
   },
   watch: {},
   emits: ["go-to-my-items", "edit-item", "delete-item"],
@@ -71,7 +76,22 @@ export default {
       <div class="d-flex justify-end">
         <v-icon @click="$emit('go-to-my-items')">mdi-close</v-icon>
       </div>
-      <v-img class="item-image" :src="imagePlaceholder" cover />
+      <v-carousel
+        v-if="item.images?.length"
+        class="item-image"
+        hide-delimiters
+        show-arrows="hover"
+        height="280"
+      >
+        <v-carousel-item
+          v-for="(img, index) in item.images"
+          :key="index"
+          :src="img.imageUrl"
+          cover
+        />
+      </v-carousel>
+
+      <v-img v-else class="item-image" :src="imagePlaceholder" cover />
       <div class="top-text">
         <v-card-title class="item-title pa-0">
           {{ item.name }}
@@ -172,11 +192,7 @@ export default {
             <v-icon>mdi-pencil-outline</v-icon>
             Rediger
           </v-btn>
-          <v-btn
-            @click="$emit('delete-item', item.id)"
-            color="#2a2a2a"
-            class="delete-btn"
-          >
+          <v-btn @click="$emit('delete-item', item.id)" color="#2a2a2a">
             <v-icon>mdi-delete-outline</v-icon>
             Slet
           </v-btn>
@@ -295,9 +311,5 @@ export default {
 
 .select-status :deep(.v-field) {
   background-color: #2a2a2a;
-}
-
-.delete-btn {
-  color: red;
 }
 </style>

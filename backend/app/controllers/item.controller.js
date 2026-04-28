@@ -40,7 +40,14 @@ exports.create = async (req, res) => {
 // Retrieve all Items
 exports.findAll = async (req, res) => {
   try {
-    const items = await Item.findAll();
+    const items = await Item.findAll({
+      include: [
+        {
+          model: db.images,
+          as: "images",
+        }
+      ]
+    });
     res.send(items);
   } catch (err) {
     res.status(500).send({
@@ -54,7 +61,14 @@ exports.findOne = async (req, res) => {
   try {
     const id = req.params.id;
 
-    const item = await Item.findByPk(id);
+    const item = await Item.findByPk(id, {
+      include: [
+        {
+          model: db.images,
+          as: "images",
+        }
+      ]
+    });
 
     if (!item) {
       return res.status(404).send({

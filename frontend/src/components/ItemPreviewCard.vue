@@ -26,13 +26,18 @@ export default {
     categoryName() {
       return this.categories[this.item.categoryId] || "Ukendt";
     },
+    mainImage() {
+      return this.item.images?.length
+        ? this.item.images[0].imageUrl
+        : this.imagePlaceholder;
+    },
   },
 };
 </script>
 
 <template>
   <v-card @click="$emit('open')" class="rounded-lg">
-    <v-img class="item-image" :src="imagePlaceholder" cover />
+    <v-img class="item-image" :src="mainImage" cover />
     <div class="info-content">
       <div class="top-text">
         <v-card-title class="pa-0"> {{ item.name }} </v-card-title>

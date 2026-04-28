@@ -13,6 +13,8 @@ export default {
     return {
       imagePlaceholder: placeholder,
       showSuccessDialog: false,
+      showImageDialog: false,
+      selectedImage: "",
     };
   },
   computed: {
@@ -60,8 +62,18 @@ export default {
       };
       return this.itemForm.pickupTimes.map((id) => map[id]).join(", ");
     },
+    mainImage() {
+      return this.itemForm.images?.length
+        ? this.itemForm.images[0]
+        : this.imagePlaceholder;
+    },
   },
-  methods: {},
+  methods: {
+    openImagePreview(img) {
+      this.selectedImage = img;
+      this.showImageDialog = true;
+    },
+  },
   watch: {},
   props: {
     currentStep: {
@@ -90,7 +102,29 @@ export default {
 
     <!-- Inner card -->
     <v-card class="item-preview">
-      <v-img class="item-image" :src="imagePlaceholder" cover />
+      <div v-if="itemForm.images?.length" class="image-count">
+        <v-icon size="16">mdi-camera</v-icon>
+        {{ itemForm.images.length }}
+      </div>
+      <v-carousel
+        v-if="itemForm.images?.length"
+        class="item-image"
+        hide-delimiters
+        :show-arrows="itemForm.images.length > 1 ? 'hover' : false"
+        height="280"
+      >
+        <v-carousel-item v-for="(img, index) in itemForm.images" :key="index">
+          <v-img
+            :src="img"
+            contain
+            height="280"
+            class="clickable-image"
+            @click="openImagePreview(img)"
+          />
+        </v-carousel-item>
+      </v-carousel>
+
+      <v-img v-else class="item-image" :src="imagePlaceholder" cover />
       <v-card-title class="item-title">{{ itemForm.name }}</v-card-title>
       <v-card-subtitle class="item-subtitle">{{
         itemForm.brand
@@ -174,6 +208,19 @@ export default {
       </v-row>
     </div>
   </v-container>
+
+  <!-- Image dialog -->
+  <v-dialog v-model="showImageDialog" max-width="900">
+    <v-card>
+      <v-img :src="selectedImage" contain max-height="80vh" />
+
+      <v-card-actions>
+        <v-spacer />
+        <v-btn text @click="showImageDialog = false"> Luk </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   <SuccessDialog
     v-model="showSuccessDialog"
     @go-to-my-items="$emit('go-to-my-items')"
@@ -214,6 +261,10 @@ export default {
   border-radius: 12px;
   margin: 12px 0;
   height: 280px;
+}
+
+.clickable-image {
+  cursor: zoom-in;
 }
 
 .item-title {
@@ -273,5 +324,20 @@ export default {
 }
 .value {
   font-weight: 500;
+}
+
+.image-count {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 </style>
