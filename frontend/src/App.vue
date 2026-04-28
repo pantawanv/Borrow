@@ -63,8 +63,8 @@ export default {
       this.currentPage = "discover";
     },
 
-    goToBasicInfo() {
-      if (!this.editingItemId) {
+    goToBasicInfo(reset = false) {
+      if (reset) {
         this.resetForm();
       }
 
@@ -245,7 +245,7 @@ export default {
     <v-main>
       <Home
         v-if="currentPage === 'home'"
-        @go-to-basic-info="goToBasicInfo"
+        @go-to-basic-info="goToBasicInfo(true)"
         @go-to-discover="goToDiscover"
       />
 
@@ -282,7 +282,7 @@ export default {
       <MyItems
         v-if="currentPage === 'myItems'"
         @view-item-details="viewItemDetails"
-        @go-to-basic-info="goToBasicInfo"
+        @go-to-basic-info="goToBasicInfo(true)"
       />
 
       <ItemDetailsPage

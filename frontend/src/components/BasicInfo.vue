@@ -25,7 +25,6 @@ export default {
         { title: "1 måned", value: 30 },
       ],
 
-      uploadedImages: [],
       showImageDialog: false,
       selectedImage: "",
 
@@ -53,7 +52,7 @@ export default {
         const reader = new FileReader();
 
         reader.onload = (e) => {
-          this.uploadedImages.unshift(e.target.result);
+          this.itemForm.images.unshift(e.target.result);
         };
 
         reader.readAsDataURL(file);
@@ -68,14 +67,14 @@ export default {
         const reader = new FileReader();
 
         reader.onload = (e) => {
-          this.uploadedImages.unshift(e.target.result);
+          this.itemForm.images.unshift(e.target.result);
         };
 
         reader.readAsDataURL(file);
       });
     },
     removeImage(index) {
-      this.uploadedImages.splice(index, 1);
+      this.itemForm.images.splice(index, 1);
     },
     openImagePreview(img) {
       this.selectedImage = img;
@@ -126,7 +125,7 @@ export default {
       }
 
       // Images validation
-      if (this.uploadedImages.length === 0) {
+      if (this.itemForm.images.length === 0) {
         this.errors.images =
           "Tilføj venligst mindst ét billede af genstanden, så låneren ved, hvad de kan forvente.";
         valid = false;
@@ -138,7 +137,6 @@ export default {
     },
     nextStep() {
       if (this.validate()) {
-        this.itemForm.images = [...this.uploadedImages];
         this.$emit("go-to-details");
       }
     },
@@ -297,12 +295,12 @@ export default {
 
     <!-- Preview -->
     <v-carousel
-      v-if="uploadedImages.length"
+      v-if="itemForm.images.length"
       hide-delimiters
       height="260"
       class="mt-4 rounded-lg"
     >
-      <v-carousel-item v-for="(img, index) in uploadedImages" :key="index">
+      <v-carousel-item v-for="(img, index) in itemForm.images" :key="index">
         <v-img
           :src="img"
           cover
