@@ -15,6 +15,7 @@ export default {
       showSuccessDialog: false,
       showImageDialog: false,
       selectedImage: "",
+      currentImageIndex: 0,
     };
   },
   computed: {
@@ -104,10 +105,11 @@ export default {
     <v-card class="item-preview">
       <div v-if="itemForm.images?.length" class="image-count">
         <v-icon size="16">mdi-camera</v-icon>
-        {{ itemForm.images.length }}
+        {{ currentImageIndex + 1 }} / {{ itemForm.images.length }}
       </div>
       <v-carousel
         v-if="itemForm.images?.length"
+        v-model="currentImageIndex"
         class="item-image"
         hide-delimiters
         :show-arrows="itemForm.images.length > 1 ? 'hover' : false"

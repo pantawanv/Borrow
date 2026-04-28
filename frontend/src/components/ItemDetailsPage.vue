@@ -15,6 +15,9 @@ export default {
       pickupDays: [],
       pickupTimes: [],
       selectedStatus: null,
+      showImageDialog: false,
+      selectedImage: "",
+      currentImageIndex: 0,
     };
   },
   async mounted() {
@@ -37,6 +40,10 @@ export default {
       } catch (error) {
         console.error("Error updating status:", error);
       }
+    },
+    openImagePreview(img) {
+      this.selectedImage = img;
+      this.showImageDialog = true;
     },
   },
   computed: {
@@ -76,21 +83,28 @@ export default {
       <div class="d-flex justify-end">
         <v-icon @click="$emit('go-to-my-items')">mdi-close</v-icon>
       </div>
+      <div v-if="item.images?.length" class="image-count">
+        <v-icon size="16">mdi-camera</v-icon>
+        {{ currentImageIndex + 1 }} / {{ item.images.length }}
+      </div>
       <v-carousel
         v-if="item.images?.length"
+        v-model="currentImageIndex"
         class="item-image"
         hide-delimiters
-        show-arrows="hover"
+        :show-arrows="item.images.length > 1 ? 'hover' : false"
         height="280"
       >
-        <v-carousel-item
-          v-for="(img, index) in item.images"
-          :key="index"
-          :src="img.imageUrl"
-          cover
-        />
+        <v-carousel-item v-for="(img, index) in item.images" :key="index">
+          <v-img
+            :src="img.imageUrl"
+            contain
+            height="280"
+            class="clickable-image"
+            @click="openImagePreview(img.imageUrl)"
+          />
+        </v-carousel-item>
       </v-carousel>
-
       <v-img v-else class="item-image" :src="imagePlaceholder" cover />
       <div class="top-text">
         <v-card-title class="item-title pa-0">
@@ -200,6 +214,16 @@ export default {
       </div>
     </v-card>
   </v-container>
+  <v-dialog v-model="showImageDialog" max-width="900">
+    <v-card>
+      <v-img :src="selectedImage" contain max-height="80vh" />
+
+      <v-card-actions>
+        <v-spacer />
+        <v-btn text @click="showImageDialog = false"> Luk </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>
@@ -311,5 +335,24 @@ export default {
 
 .select-status :deep(.v-field) {
   background-color: #2a2a2a;
+}
+
+.clickable-image {
+  cursor: zoom-in;
+}
+
+.image-count {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 </style>
