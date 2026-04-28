@@ -221,9 +221,9 @@ export default {
         description: item.description,
         extraNotes: item.extraNotes,
         status: item.status,
-        pickupDays: [],
-        pickupTimes: [],
-        images: [],
+        pickupDays: pickupDays.map((day) => day.id),
+        pickupTimes: pickupTimes.map((time) => time.id),
+        images: item.images?.map((img) => img.imageUrl) || [],
       };
 
       this.goToBasicInfo();
@@ -257,6 +257,7 @@ export default {
         v-if="currentPage === 'basicInfo'"
         :currentStep="currentStep"
         :itemForm="itemForm"
+        :is-editing="!!editingItemId"
         @go-to-details="goToDetails"
         @go-to-my-items="goToMyItems"
       />
@@ -265,6 +266,7 @@ export default {
         v-if="currentPage === 'details'"
         :currentStep="currentStep"
         :itemForm="itemForm"
+        :is-editing="!!editingItemId"
         @go-to-basic-info="goToBasicInfo"
         @go-to-confirm="goToConfirm"
         @go-to-my-items="goToMyItems"
@@ -274,6 +276,7 @@ export default {
         v-if="currentPage === 'confirm'"
         :currentStep="currentStep"
         :itemForm="itemForm"
+        :is-editing="!!editingItemId"
         @go-to-details="goToDetails"
         @go-to-my-items="goToMyItems"
         @save-item="saveItem"

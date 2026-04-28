@@ -1,9 +1,11 @@
 <script>
 import Stepper from "@/components/Stepper.vue";
+import SuccessDialog from "./SuccessDialog.vue";
 export default {
   name: "",
   components: {
     Stepper,
+    SuccessDialog,
   },
   data() {
     return {
@@ -36,6 +38,8 @@ export default {
         description: "",
         images: "",
       },
+      showExitDialog: false,
+      dialogType: "",
     };
   },
   computed: {},
@@ -140,6 +144,11 @@ export default {
         this.$emit("go-to-details");
       }
     },
+    openExitDialog() {
+      this.dialogType = this.isEditing ? "exit-edit" : "exit";
+
+      this.showExitDialog = true;
+    },
   },
   watch: {},
   props: {
@@ -148,6 +157,7 @@ export default {
       default: 1,
     },
     itemForm: Object,
+    isEditing: Boolean,
   },
   emits: ["go-to-details", "go-to-my-items"],
 };
@@ -159,7 +169,7 @@ export default {
       <v-toolbar-title class="text-center font-weight-bold">
         Opret ny genstand
       </v-toolbar-title>
-      <v-icon @click="$emit('go-to-my-items')">mdi-close</v-icon>
+      <v-icon @click="openExitDialog">mdi-close</v-icon>
     </v-toolbar>
 
     <Stepper :currentStep="currentStep" />
@@ -351,6 +361,11 @@ export default {
       </v-row>
     </div>
   </v-container>
+  <SuccessDialog
+    v-model="showExitDialog"
+    :dialog-type="dialogType"
+    @go-to-my-items="$emit('go-to-my-items')"
+  />
 </template>
 
 <style scoped>

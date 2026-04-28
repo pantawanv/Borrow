@@ -21,6 +21,8 @@ export default {
     dialogTitle() {
       if (this.dialogType === "update") return "Genstand Opdateret!";
       if (this.dialogType === "delete") return "Slet Genstand?";
+      if (this.dialogType === "exit") return "Annuller oprettelse?";
+      if (this.dialogType === "exit-edit") return "Annuller redigering?";
       return "Genstand Oprettet!";
     },
 
@@ -33,11 +35,22 @@ export default {
         return "Er du sikker på, at du vil slette denne genstand? Denne handling kan ikke fortrydes.";
       }
 
+      if (this.dialogType === "exit") {
+        return "Er du sikker på, at du vil annullere oprettelsen? Dine indtastede oplysninger går tabt.";
+      }
+
+      if (this.dialogType === "exit-edit") {
+        return "Er du sikker på, at du vil annullere redigeringen? Dine ændringer går tabt.";
+      }
+
       return "Tak fordi du deler din genstand med andre. Den er nu synlig for andre brugere, og du kan administrere den under 'Mine genstande'.";
     },
 
     isDelete() {
       return this.dialogType === "delete";
+    },
+    isExit() {
+      return this.dialogType === "exit" || this.dialogType === "exit-edit";
     },
   },
 };
@@ -55,7 +68,7 @@ export default {
         </v-card-title>
 
         <v-img
-          v-if="!isDelete"
+          v-if="!isDelete && !isExit"
           :src="congratsIcon"
           contain
           max-width="50"
@@ -85,6 +98,28 @@ export default {
             "
           >
             Slet
+          </v-btn>
+        </v-card-actions>
+
+        <!--   EXIT -->
+        <v-card-actions v-else-if="isExit" class="justify-center mt-4 ga-3">
+          <v-btn
+            color="grey-darken-2"
+            variant="flat"
+            @click="$emit('update:modelValue', false)"
+          >
+            Bliv
+          </v-btn>
+
+          <v-btn
+            color="red-darken-1"
+            variant="flat"
+            @click="
+              $emit('update:modelValue', false);
+              $emit('go-to-my-items');
+            "
+          >
+            Anuller
           </v-btn>
         </v-card-actions>
 

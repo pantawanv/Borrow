@@ -12,10 +12,11 @@ export default {
   data() {
     return {
       imagePlaceholder: placeholder,
-      showSuccessDialog: false,
       showImageDialog: false,
       selectedImage: "",
       currentImageIndex: 0,
+      showDialog: false,
+      dialogType: null,
     };
   },
   computed: {
@@ -74,6 +75,11 @@ export default {
       this.selectedImage = img;
       this.showImageDialog = true;
     },
+    openExitDialog() {
+      this.dialogType = this.isEditing ? "exit-edit" : "exit";
+
+      this.showDialog = true;
+    },
   },
   watch: {},
   props: {
@@ -82,6 +88,7 @@ export default {
       default: 1,
     },
     itemForm: Object,
+    isEditing: Boolean,
   },
   emits: ["go-to-details", "go-to-my-items", "save-item"],
 };
@@ -93,7 +100,7 @@ export default {
       <v-toolbar-title class="text-center font-weight-bold">
         Opret ny genstand
       </v-toolbar-title>
-      <v-icon @click="$emit('go-to-my-items')">mdi-close</v-icon>
+      <v-icon @click="openExitDialog">mdi-close</v-icon>
     </v-toolbar>
 
     <Stepper :currentStep="currentStep" />
@@ -224,7 +231,8 @@ export default {
   </v-dialog>
 
   <SuccessDialog
-    v-model="showSuccessDialog"
+    v-model="showDialog"
+    :dialog-type="dialogType"
     @go-to-my-items="$emit('go-to-my-items')"
   />
 </template>

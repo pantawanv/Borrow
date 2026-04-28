@@ -1,9 +1,11 @@
 <script>
 import Stepper from "@/components/Stepper.vue";
+import SuccessDialog from "@/components/SuccessDialog.vue";
 export default {
   name: "",
   components: {
     Stepper,
+    SuccessDialog,
   },
   data() {
     return {
@@ -26,10 +28,16 @@ export default {
         pickupDays: "",
         pickupTimes: "",
       },
+      showExitDialog: false,
+      dialogType: "",
     };
   },
   computed: {},
   methods: {
+    openExitDialog() {
+      this.dialogType = this.isEditing ? "exit-edit" : "exit";
+      this.showExitDialog = true;
+    },
     toggleDay(id) {
       const index = this.itemForm.pickupDays.indexOf(id);
 
@@ -77,6 +85,7 @@ export default {
       default: 1,
     },
     itemForm: Object,
+    isEditing: Boolean,
   },
   emits: ["go-to-basic-info", "go-to-confirm", "go-to-my-items"],
 };
@@ -88,7 +97,7 @@ export default {
       <v-toolbar-title class="text-center font-weight-bold">
         Opret ny genstand
       </v-toolbar-title>
-      <v-icon @click="$emit('go-to-my-items')">mdi-close</v-icon>
+      <v-icon @click="openExitDialog">mdi-close</v-icon>
     </v-toolbar>
 
     <Stepper :currentStep="currentStep" />
@@ -197,6 +206,11 @@ export default {
       </v-row>
     </div>
   </v-container>
+  <SuccessDialog
+    v-model="showExitDialog"
+    :dialog-type="dialogType"
+    @go-to-my-items="$emit('go-to-my-items')"
+  />
 </template>
 
 <style scoped>
