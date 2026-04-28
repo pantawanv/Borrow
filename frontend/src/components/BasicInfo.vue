@@ -167,7 +167,7 @@ export default {
   <v-container class="pa-6" max-width="600">
     <v-toolbar flat color="transparent">
       <v-toolbar-title class="text-center font-weight-bold">
-        Opret ny genstand
+        {{ isEditing ? "Opdater genstand" : "Opret ny genstand" }}
       </v-toolbar-title>
       <v-icon @click="openExitDialog">mdi-close</v-icon>
     </v-toolbar>
@@ -309,6 +309,7 @@ export default {
       hide-delimiters
       height="260"
       class="mt-4 rounded-lg"
+      :show-arrows="itemForm.images.length > 1"
     >
       <v-carousel-item v-for="(img, index) in itemForm.images" :key="index">
         <v-img
@@ -319,7 +320,13 @@ export default {
           @click="openImagePreview(img)"
         />
         <div class="carousel-actions">
-          <v-btn icon color="red" size="small" @click.stop="removeImage(index)">
+          <v-btn
+            icon
+            color="red"
+            size="small"
+            class="delete-image-btn"
+            @click.stop="removeImage(index)"
+          >
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </div>
@@ -428,10 +435,11 @@ export default {
   width: 120px;
 }
 
-.delete-btn {
+.delete-image-btn {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
 }
 
 .carousel-actions {

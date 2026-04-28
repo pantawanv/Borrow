@@ -18,6 +18,7 @@ export default {
       showImageDialog: false,
       selectedImage: "",
       currentImageIndex: 0,
+      showToast: false,
     };
   },
   async mounted() {
@@ -37,6 +38,7 @@ export default {
         });
 
         this.item.status = this.selectedStatus;
+        this.showToast = true;
       } catch (error) {
         console.error("Error updating status:", error);
       }
@@ -195,6 +197,14 @@ export default {
             >
               Gem
             </v-btn>
+            <v-snackbar
+              v-model="showToast"
+              location="top"
+              timeout="3000"
+              color="green-darken-1"
+            >
+              Status opdateret!
+            </v-snackbar>
           </div>
         </div>
         <div class="btn-actions">

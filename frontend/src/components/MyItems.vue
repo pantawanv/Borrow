@@ -11,6 +11,9 @@ export default {
     return {
       items: [],
       loading: false,
+      selectedFilter: "Alle",
+
+      filters: ["Alle", "Tilgængelig", "Udlånt", "Inaktiv"],
     };
   },
 
@@ -28,6 +31,28 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+  },
+  computed: {
+    filteredItems() {
+      if (this.selectedFilter === "Alle") {
+        return this.items;
+      }
+
+      return this.items.filter((item) => item.status === this.selectedFilter);
+    },
+
+    filterCounts() {
+      return {
+        Alle: this.items.length,
+
+        Tilgængelig: this.items.filter((item) => item.status === "Tilgængelig")
+          .length,
+
+        Udlånt: this.items.filter((item) => item.status === "Udlånt").length,
+
+        Inaktiv: this.items.filter((item) => item.status === "Inaktiv").length,
+      };
     },
   },
 
@@ -49,18 +74,32 @@ export default {
   <v-row>
     <v-col cols="12">
       <div class="filter-btn-group">
-        <v-btn>Alle</v-btn>
-        <v-btn>Tilgængelig</v-btn>
-        <v-btn>Udlånt</v-btn>
-        <v-btn>Inaktive</v-btn>
+        <v-btn
+          v-for="filter in filters"
+          :key="filter"
+          @click="selectedFilter = filter"
+          :color="
+            selectedFilter === filter ? 'green-lighten-1' : 'grey-darken-3'
+          "
+          :class="selectedFilter === filter ? 'text-black' : ''"
+        >
+          {{ filter }} ({{ filterCounts[filter] }})
+        </v-btn>
       </div>
     </v-col>
   </v-row>
   <p class="info-text">
     Her kan du se og administrere de genstande, du har tilføjet.
   </p>
+  <p v-if="items.length === 0" class="info-text">
+    Du har ingen genstande endnu.
+  </p>
+
+  <p v-else-if="filteredItems.length === 0" class="info-text">
+    Ingen genstande matcher det valgte filter.
+  </p>
   <v-row class="pa-6">
-    <v-col v-for="item in items" :key="item.id" cols="12" md="6" lg="4">
+    <v-col v-for="item in filteredItems" :key="item.id" cols="12" md="6" lg="4">
       <ItemPreviewCard :item="item" @open="$emit('view-item-details', item)" />
     </v-col>
   </v-row>

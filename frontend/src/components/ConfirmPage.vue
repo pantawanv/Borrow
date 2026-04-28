@@ -98,7 +98,7 @@ export default {
   <v-container class="pa-6" max-width="600">
     <v-toolbar flat color="transparent">
       <v-toolbar-title class="text-center font-weight-bold">
-        Opret ny genstand
+        {{ isEditing ? "Opdater genstand" : "Opret ny genstand" }}
       </v-toolbar-title>
       <v-icon @click="openExitDialog">mdi-close</v-icon>
     </v-toolbar>
