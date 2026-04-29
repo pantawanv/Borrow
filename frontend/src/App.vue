@@ -327,5 +327,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-left: 16px;
 }
 </style>
