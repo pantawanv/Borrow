@@ -37,15 +37,19 @@ export default {
 
 <template>
   <v-card @click="$emit('open')" class="rounded-lg">
-    <v-img class="item-image" :src="mainImage" cover />
+    <v-img class="item-image" :src="mainImage" contain />
     <div class="info-content">
       <div class="top-text">
-        <v-card-title class="pa-0"> {{ item.name }} </v-card-title>
+        <v-card-title class="pa-0 title-truncate" t>
+          {{ item.name }}
+        </v-card-title>
 
         <v-chip size="small"> {{ item.status }} </v-chip>
       </div>
 
-      <p class="brand-text">{{ item.brand }}</p>
+      <p class="brand-text">
+        {{ item.brand || "Ukendt mærke" }}
+      </p>
 
       <div class="chip-group">
         <v-chip size="small"> {{ item.itemCondition }}</v-chip>
@@ -62,6 +66,13 @@ export default {
   align-items: center;
   padding: 8px 16px 0;
   margin: 0;
+}
+
+.title-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
 }
 
 .brand-text {
@@ -82,5 +93,12 @@ export default {
 
 .item-image {
   height: 300px;
+  background-color: white;
+}
+
+@media (min-width: 960px) {
+  .item-image {
+    height: 600px;
+  }
 }
 </style>

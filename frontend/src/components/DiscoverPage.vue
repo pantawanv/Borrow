@@ -10,17 +10,17 @@ export default {
     return {
       items: [],
       loading: false,
-      selectedFilter: "Alle",
+      selectedFilter: { label: "Alle", value: null },
       filters: [
-        "Alle",
-        "Værktøj",
-        "Køkken",
-        "Elektronik",
-        "Udendørs",
-        "Sport",
-        "Transport",
-        "Underholdning",
-        "Andet",
+        { label: "Alle", value: null },
+        { label: "Værktøj", value: 1 },
+        { label: "Køkken", value: 2 },
+        { label: "Elektronik", value: 3 },
+        { label: "Udendørs", value: 4 },
+        { label: "Sport", value: 5 },
+        { label: "Transport", value: 6 },
+        { label: "Underholdning", value: 7 },
+        { label: "Andet", value: 8 },
       ],
     };
   },
@@ -30,29 +30,26 @@ export default {
 
   computed: {
     filteredItems() {
-      if (this.selectedFilter === "Alle") {
+      if (this.selectedFilter.value === null) {
         return this.items;
       }
 
-      return this.items.filter((item) => item.category === this.selectedFilter);
+      return this.items.filter(
+        (item) => item.categoryId === this.selectedFilter.value,
+      );
     },
     filterCounts() {
       return {
         Alle: this.items.length,
-        Værktøj: this.items.filter((item) => item.category === "Værktøj")
+        Værktøj: this.items.filter((item) => item.categoryId === 1).length,
+        Køkken: this.items.filter((item) => item.categoryId === 2).length,
+        Elektronik: this.items.filter((item) => item.categoryId === 3).length,
+        Udendørs: this.items.filter((item) => item.categoryId === 4).length,
+        Sport: this.items.filter((item) => item.categoryId === 5).length,
+        Transport: this.items.filter((item) => item.categoryId === 6).length,
+        Underholdning: this.items.filter((item) => item.categoryId === 7)
           .length,
-        Køkken: this.items.filter((item) => item.category === "Køkken").length,
-        Elektronik: this.items.filter((item) => item.category === "Elektronik")
-          .length,
-        Udendørs: this.items.filter((item) => item.category === "Udendørs")
-          .length,
-        Sport: this.items.filter((item) => item.category === "Sport").length,
-        Transport: this.items.filter((item) => item.category === "Transport")
-          .length,
-        Underholdning: this.items.filter(
-          (item) => item.category === "Underholdning",
-        ).length,
-        Andet: this.items.filter((item) => item.category === "Andet").length,
+        Andet: this.items.filter((item) => item.categoryId === 8).length,
       };
     },
   },
@@ -93,7 +90,7 @@ export default {
         <div class="filter-scroll">
           <v-btn
             v-for="filter in filters"
-            :key="filter"
+            :key="filter.value"
             rounded="xl"
             @click="selectedFilter = filter"
             :color="
@@ -101,7 +98,7 @@ export default {
             "
             :class="selectedFilter === filter ? 'text-black' : ''"
           >
-            {{ filter }} ({{ filterCounts[filter] }})
+            {{ filter.label }} ({{ filterCounts[filter.label] }})
           </v-btn>
         </div>
       </div>

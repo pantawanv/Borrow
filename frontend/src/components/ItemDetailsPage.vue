@@ -109,11 +109,11 @@ export default {
       </v-carousel>
       <v-img v-else class="item-image" :src="imagePlaceholder" cover />
       <div class="top-text">
-        <v-card-title class="item-title pa-0">
+        <v-card-title class="item-title title-truncate pa-0">
           {{ item.name }}
         </v-card-title>
 
-        <v-chip size="small">{{ item.status }}</v-chip>
+        <v-chip size="small" class="status-chip">{{ item.status }}</v-chip>
       </div>
       <v-card-subtitle class="item-subtitle pa-0">{{
         item.brand
@@ -267,6 +267,18 @@ export default {
 .item-title,
 .item-subtitle {
   padding: 2px;
+}
+
+.title-truncate {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-chip {
+  flex-shrink: 0;
 }
 
 .info-list {
