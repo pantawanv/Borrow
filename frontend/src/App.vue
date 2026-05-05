@@ -253,7 +253,10 @@ export default {
 
       <!-- Page navigation -->
 
-      <DiscoverPage v-if="currentPage === 'discover'" />
+      <DiscoverPage
+        v-if="currentPage === 'discover'"
+        @view-item-details="viewItemDetails"
+      />
 
       <BasicInfo
         v-if="currentPage === 'basicInfo'"

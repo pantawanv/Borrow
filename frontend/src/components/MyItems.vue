@@ -77,6 +77,7 @@ export default {
         <v-btn
           v-for="filter in filters"
           :key="filter"
+          rounded="xl"
           @click="selectedFilter = filter"
           :color="
             selectedFilter === filter ? 'green-lighten-1' : 'grey-darken-3'
