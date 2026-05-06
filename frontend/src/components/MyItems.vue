@@ -68,7 +68,8 @@ export default {
       class="text-black"
       @click="$emit('go-to-basic-info')"
     >
-      + Tilføj Genstand
+      Opret ny genstand
+      <v-icon size="18" class="ml-1">mdi-plus</v-icon>
     </v-btn>
   </div>
   <v-row>

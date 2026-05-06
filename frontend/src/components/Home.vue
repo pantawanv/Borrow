@@ -15,6 +15,12 @@ export default {
 <template>
   <div class="home-text">
     <h1>Velkommen til Borrow!</h1>
+    <!--   <v-img
+      src="@/assets/images/borrowLogo.png"
+      contain
+      max-width="200"
+      class="mx-auto"
+    /> -->
     <h2>Del mere. Køb mindre.</h2>
     <h3>
       Del og lån genstande i dit lokalsamfund! <br />
@@ -27,16 +33,19 @@ export default {
           class="text-black"
           @click="$emit('go-to-discover')"
         >
-          Find genstande →</v-btn
-        >
+          Find genstande
+          <v-icon size="18" class="ml-1">mdi-arrow-right</v-icon>
+        </v-btn>
       </v-col>
       <v-col cols="12" md="auto">
         <v-btn
           color="grey-darken-4"
           class="text-white"
           @click="$emit('go-to-basic-info')"
-          >Opret ny genstand</v-btn
         >
+          Opret ny genstand
+          <v-icon size="18" class="ml-1">mdi-plus</v-icon>
+        </v-btn>
       </v-col>
     </v-row>
     <!-- <v-col class="mt-4 ga-3 justify-center">

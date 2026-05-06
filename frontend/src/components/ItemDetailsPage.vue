@@ -173,7 +173,7 @@ export default {
           <p class="text-content">{{ item.extraNotes }}</p>
         </div>
         <v-divider class="my-2" />
-        <!-- To do - skift placeholder tekst baseret på genstandens status (tilgængelig, udlånt, reserveret) -->
+
         <div>
           <p id="item-admin-label">Administrer genstand</p>
 

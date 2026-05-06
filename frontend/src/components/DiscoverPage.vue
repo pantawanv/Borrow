@@ -10,6 +10,7 @@ export default {
     return {
       items: [],
       loading: false,
+      searchQuery: "",
       selectedFilter: { label: "Alle", value: null },
       filters: [
         { label: "Alle", value: null },
@@ -30,13 +31,27 @@ export default {
 
   computed: {
     filteredItems() {
-      if (this.selectedFilter.value === null) {
-        return this.items;
+      let result = this.items;
+
+      // Category filter
+      if (this.selectedFilter.value !== null) {
+        result = result.filter(
+          (item) => item.categoryId === this.selectedFilter.value,
+        );
       }
 
-      return this.items.filter(
-        (item) => item.categoryId === this.selectedFilter.value,
-      );
+      // Search filter
+      if (this.searchQuery.trim()) {
+        const query = this.searchQuery.toLowerCase();
+
+        result = result.filter(
+          (item) =>
+            item.name?.toLowerCase().includes(query) ||
+            item.brand?.toLowerCase().includes(query),
+        );
+      }
+
+      return result;
     },
     filterCounts() {
       return {
@@ -77,12 +92,15 @@ export default {
     Roskilde (4000)
   </p>
   <v-text-field
+    v-model="searchQuery"
     class="ma-4"
     label="Søg efter genstande"
     prepend-inner-icon="mdi-magnify"
     rounded="lg"
     variant="solo"
     hide-details
+    append-inner-icon="mdi-close"
+    @click:append-inner="searchQuery = ''"
   />
   <v-row>
     <v-col cols="12">
