@@ -30,7 +30,7 @@ export default {
       <v-col cols="12" md="auto">
         <v-btn
           color="green-lighten-1"
-          class="text-black"
+          style="color: black"
           @click="$emit('go-to-discover')"
         >
           Find genstande
@@ -94,10 +94,6 @@ export default {
 .home-text h3 {
   color: #757575;
   font-weight: normal;
-}
-
-.text-black {
-  color: black;
 }
 
 .text-white {

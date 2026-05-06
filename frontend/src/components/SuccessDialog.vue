@@ -23,6 +23,7 @@ export default {
       if (this.dialogType === "delete") return "Slet Genstand?";
       if (this.dialogType === "exit") return "Annuller oprettelse?";
       if (this.dialogType === "exit-edit") return "Annuller redigering?";
+      if (this.dialogType === "exit-request") return "Annuller anmodning?";
       return "Genstand Oprettet!";
     },
 
@@ -43,6 +44,10 @@ export default {
         return "Er du sikker på, at du vil annullere redigeringen? Dine ændringer går tabt.";
       }
 
+      if (this.dialogType === "exit-request") {
+        return "Er du sikker på, at du vil annullere anmodningen? Dine indtastede oplysninger går tabt.";
+      }
+
       return "Tak fordi du deler din genstand med andre. Den er nu synlig for andre brugere, og du kan administrere den under 'Mine genstande'.";
     },
 
@@ -50,7 +55,11 @@ export default {
       return this.dialogType === "delete";
     },
     isExit() {
-      return this.dialogType === "exit" || this.dialogType === "exit-edit";
+      return (
+        this.dialogType === "exit" ||
+        this.dialogType === "exit-edit" ||
+        this.dialogType === "exit-request"
+      );
     },
   },
 };
@@ -119,7 +128,7 @@ export default {
               $emit('go-to-my-items');
             "
           >
-            Anuller
+            Ja, anuller
           </v-btn>
         </v-card-actions>
 

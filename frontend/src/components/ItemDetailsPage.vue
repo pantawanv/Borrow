@@ -3,10 +3,15 @@ import placeholder from "@/assets/images/placeholder.jpg";
 import deleteIcon from "@/assets/images/delete.png";
 import editIcon from "@/assets/images/edit.png";
 import { itemService } from "@/services/itemService";
+import OwnerActions from "@/components/OwnerActions.vue";
+import BorrowerActions from "@/components/BorrowerActions.vue";
 
 export default {
   name: "",
-  components: {},
+  components: {
+    OwnerActions,
+    BorrowerActions,
+  },
   data() {
     return {
       imagePlaceholder: placeholder,
@@ -47,6 +52,9 @@ export default {
       this.selectedImage = img;
       this.showImageDialog = true;
     },
+    sendBorrowRequest(item) {
+      console.log("Borrow request sent for item:", item);
+    },
   },
   computed: {
     categoryName() {
@@ -70,9 +78,15 @@ export default {
         ? this.item.images[0].imageUrl
         : this.imagePlaceholder;
     },
+    // Placeholder for current user check - replace with actual auth logic
+    isOwner() {
+      const currentUserId = 2;
+
+      return this.item.ownerUserId === currentUserId;
+    },
   },
   watch: {},
-  emits: ["go-to-my-items", "edit-item", "delete-item"],
+  emits: ["go-to-my-items", "edit-item", "delete-item", "go-to-send-request"],
   props: {
     item: Object,
   },
@@ -173,57 +187,28 @@ export default {
           <p class="text-content">{{ item.extraNotes }}</p>
         </div>
         <v-divider class="my-2" />
+        <OwnerActions
+          v-if="isOwner"
+          :item="item"
+          :selectedStatus="selectedStatus"
+          :isStatusChanged="isStatusChanged"
+          :showToast="showToast"
+          @update:selectedStatus="selectedStatus = $event"
+          @update:showToast="showToast = $event"
+          @update-status="updateStatus"
+          @edit-item="$emit('edit-item', item)"
+          @delete-item="$emit('delete-item', item.id)"
+        />
 
-        <div>
-          <p id="item-admin-label">Administrer genstand</p>
-
-          <div class="status-row">
-            <v-select
-              v-model="selectedStatus"
-              aria-labelledby="item-admin-label"
-              rounded="lg"
-              density="compact"
-              variant="solo"
-              class="select-status"
-              :items="['Tilgængelig', 'Udlånt', 'Inaktiv']"
-              hide-details
-            />
-
-            <v-btn
-              color="green-darken-1"
-              class="save-status-btn"
-              :disabled="!isStatusChanged"
-              @click="updateStatus"
-            >
-              Gem
-            </v-btn>
-            <v-snackbar
-              v-model="showToast"
-              location="top"
-              timeout="3000"
-              color="green-darken-1"
-            >
-              Status opdateret!
-            </v-snackbar>
-          </div>
-        </div>
-        <div class="btn-actions">
-          <v-btn
-            @click="$emit('edit-item', item)"
-            color="#2a2a2a"
-            class="edit-btn"
-          >
-            <v-icon>mdi-pencil-outline</v-icon>
-            Rediger
-          </v-btn>
-          <v-btn @click="$emit('delete-item', item.id)" color="#2a2a2a">
-            <v-icon>mdi-delete-outline</v-icon>
-            Slet
-          </v-btn>
-        </div>
+        <BorrowerActions
+          v-else
+          :item="item"
+          @go-to-send-request="$emit('go-to-send-request', item)"
+        />
       </div>
     </v-card>
   </v-container>
+
   <v-dialog v-model="showImageDialog" max-width="900">
     <v-card>
       <v-img :src="selectedImage" contain max-height="80vh" />
@@ -320,43 +305,6 @@ export default {
 
 .value {
   font-weight: 500;
-}
-
-.status-row,
-.btn-actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.select-status :deep(.v-field),
-.save-status-btn,
-.edit-btn,
-.delete-btn {
-  height: 36px;
-  border-radius: 10px;
-}
-
-.select-status {
-  max-width: 200px;
-}
-
-.save-status-btn {
-  min-width: 100px;
-}
-
-.edit-btn,
-.delete-btn {
-  min-width: 120px;
-}
-
-.select-status :deep(input::placeholder) {
-  color: white;
-  opacity: 1;
-}
-
-.select-status :deep(.v-field) {
-  background-color: #2a2a2a;
 }
 
 .clickable-image {

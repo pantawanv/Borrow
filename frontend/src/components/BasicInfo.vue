@@ -362,7 +362,7 @@ export default {
           <v-btn
             block
             color="green-lighten-1"
-            class="text-black"
+            style="color: black"
             @click="nextStep"
           >
             Næste
@@ -405,10 +405,6 @@ export default {
   padding: 16px;
   display: flex;
   gap: 12px;
-}
-
-.text-black {
-  color: black;
 }
 
 .image-content {

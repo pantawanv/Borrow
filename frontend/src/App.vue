@@ -1,15 +1,16 @@
 <script>
 import Home from "@/components/Home.vue";
 import BasicInfo from "@/components/BasicInfo.vue";
-import Stepper from "./components/Stepper.vue";
-import Details from "./components/Details.vue";
-import ConfirmPage from "./components/ConfirmPage.vue";
-import MyItems from "./components/MyItems.vue";
+import Stepper from "@/components/Stepper.vue";
+import Details from "@/components/Details.vue";
+import ConfirmPage from "@/components/ConfirmPage.vue";
+import MyItems from "@/components/MyItems.vue";
 import ItemDetailsPage from "@/components/ItemDetailsPage.vue";
 import DiscoverPage from "@/components/DiscoverPage.vue";
 import { itemService } from "@/services/itemService.js";
 import SuccessDialog from "@/components/SuccessDialog.vue";
-import { imageService } from "./services/imageService";
+import { imageService } from "@/services/imageService.js";
+import SendRequestPage from "@/components/SendRequestPage.vue";
 
 export default {
   name: "App",
@@ -24,6 +25,7 @@ export default {
     MyItems,
     ItemDetailsPage,
     SuccessDialog,
+    SendRequestPage,
   },
 
   data() {
@@ -90,6 +92,10 @@ export default {
     viewItemDetails(item) {
       this.selectedItem = item;
       this.currentPage = "itemDetails";
+    },
+
+    goToSendRequest() {
+      this.currentPage = "sendRequest";
     },
 
     async saveItem() {
@@ -299,6 +305,7 @@ export default {
         @edit-item="editItem"
         @delete-item="deleteItem"
         @go-to-my-items="goToMyItems"
+        @go-to-send-request="goToSendRequest"
       />
 
       <SuccessDialog
@@ -306,6 +313,12 @@ export default {
         :dialogType="dialogType"
         @go-to-my-items="goToMyItems"
         @confirm-delete="confirmDelete"
+      />
+
+      <SendRequestPage
+        v-if="currentPage === 'sendRequest'"
+        :item="selectedItem"
+        @go-to-Discover="goToDiscover"
       />
     </v-main>
   </v-app>
