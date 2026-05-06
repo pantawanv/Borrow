@@ -95,7 +95,7 @@ export default {
 </script>
 
 <template>
-  <v-container class="pa-6" max-width="600">
+  <v-container class="page-container pa-6">
     <v-toolbar flat color="transparent">
       <v-toolbar-title class="text-center font-weight-bold">
         {{ isEditing ? "Opdater genstand" : "Opret ny genstand" }}
@@ -345,5 +345,17 @@ export default {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.page-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (min-width: 960px) {
+  .page-container {
+    max-width: 800px;
+  }
 }
 </style>

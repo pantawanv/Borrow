@@ -33,7 +33,7 @@ export default {
 </script>
 
 <template>
-  <v-container class="pa-6" max-width="600">
+  <v-container class="request-container pa-6">
     <div class="close-btn-wrapper">
       <v-icon @click="openExitDialog">mdi-close</v-icon>
     </div>
@@ -199,5 +199,17 @@ export default {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 8px;
+}
+
+.request-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (min-width: 960px) {
+  .request-container {
+    max-width: 800px;
+  }
 }
 </style>
