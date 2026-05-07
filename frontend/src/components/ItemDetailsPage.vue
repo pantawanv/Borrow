@@ -224,8 +224,8 @@ export default {
 <style scoped>
 .top-text {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 12px;
 }
 
 .item-preview {
@@ -240,8 +240,15 @@ export default {
 }
 
 .item-title {
-  font-size: 20px;
-  font-weight: bold;
+  flex: 1;
+  min-width: 0;
+
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  word-break: break-word;
+
+  line-height: 1.3;
 }
 
 .item-subtitle {
@@ -264,6 +271,7 @@ export default {
 
 .status-chip {
   flex-shrink: 0;
+  align-self: flex-start;
 }
 
 .info-list {

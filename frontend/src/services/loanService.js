@@ -20,6 +20,21 @@ export const loanService = {
         } catch (error) {
             console.error("Error creating loan:", error);
             throw error;
+        } 
+    },
+
+    async getAll() {
+        try {
+            const response = await fetch(BASE_URL);
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch loans");
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error fetching loans:", error);
+            throw error;
         }
     },
 };

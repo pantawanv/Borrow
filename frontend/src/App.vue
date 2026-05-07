@@ -11,6 +11,7 @@ import { itemService } from "@/services/itemService.js";
 import SuccessDialog from "@/components/SuccessDialog.vue";
 import { imageService } from "@/services/imageService.js";
 import SendRequestPage from "@/components/SendRequestPage.vue";
+import RequestsPage from "@/components/RequestsPage.vue";
 
 export default {
   name: "App",
@@ -26,6 +27,7 @@ export default {
     ItemDetailsPage,
     SuccessDialog,
     SendRequestPage,
+    RequestsPage,
   },
 
   data() {
@@ -97,6 +99,10 @@ export default {
 
     goToSendRequest() {
       this.currentPage = "sendRequest";
+    },
+
+    goToRequests() {
+      this.currentPage = "requests";
     },
 
     async saveItem() {
@@ -246,10 +252,19 @@ export default {
     <v-app-bar class="app-bar">
       <!-- TODO: Flyt knapperne og fjern div -->
       <div class="top-items">
-        <v-toolbar-title @click="currentPage = 'home'">
-          Borrow
-        </v-toolbar-title>
-        <v-btn @click="goToMyItems"> Mine Genstande </v-btn>
+        <div class="left-items">
+          <v-toolbar-title @click="currentPage = 'home'">
+            Borrow
+          </v-toolbar-title>
+
+          <v-btn @click="goToMyItems"> Mine Genstande </v-btn>
+        </div>
+
+        <v-btn icon>
+          <v-icon class="notification-btn" @click="goToRequests">
+            mdi-bell-outline
+          </v-icon>
+        </v-btn>
       </div>
     </v-app-bar>
     <v-main>
@@ -257,6 +272,7 @@ export default {
         v-if="currentPage === 'home'"
         @go-to-basic-info="goToBasicInfo(true)"
         @go-to-discover="goToDiscover"
+        @go-to-requests="goToRequests"
       />
 
       <!-- Page navigation -->
@@ -264,6 +280,12 @@ export default {
       <DiscoverPage
         v-if="currentPage === 'discover'"
         @view-item-details="viewItemDetails"
+      />
+
+      <RequestsPage
+        v-if="currentPage === 'requests'"
+        :item="selectedItem"
+        :itemForm="itemForm"
       />
 
       <BasicInfo
@@ -346,6 +368,22 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
   padding-left: 16px;
+  padding-right: 16px;
+}
+
+.left-items {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.notification-btn {
+  font-size: 24px;
+  align-items: end;
+}
+
+.spacer {
+  flex: 1;
 }
 </style>
