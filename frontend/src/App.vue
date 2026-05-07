@@ -189,8 +189,8 @@ export default {
         extraNotes: "",
         status: "Tilgængelig",
 
-        pickupDays: null,
-        pickupTimes: null,
+        pickupDays: [],
+        pickupTimes: [],
         message: "",
         images: [],
       };

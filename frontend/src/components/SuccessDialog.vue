@@ -24,6 +24,7 @@ export default {
       if (this.dialogType === "exit") return "Annuller oprettelse?";
       if (this.dialogType === "exit-edit") return "Annuller redigering?";
       if (this.dialogType === "exit-request") return "Annuller anmodning?";
+      if (this.dialogType === "request-sent") return "Anmodning Sendt!";
       return "Genstand Oprettet!";
     },
 
@@ -34,6 +35,10 @@ export default {
 
       if (this.dialogType === "delete") {
         return "Er du sikker på, at du vil slette denne genstand? Denne handling kan ikke fortrydes.";
+      }
+
+      if (this.dialogType === "request-sent") {
+        return "Din anmodning er blevet sendt til udlåneren. Du vil modtage en notifikation, når udlåneren har svaret på din anmodning.";
       }
 
       if (this.dialogType === "exit") {
@@ -60,6 +65,12 @@ export default {
         this.dialogType === "exit-edit" ||
         this.dialogType === "exit-request"
       );
+    },
+    buttonText() {
+      if (this.dialogType === "request-sent") {
+        return "Gå til 'Find genstande'";
+      }
+      return "Gå til mine genstande";
     },
   },
 };
@@ -143,7 +154,7 @@ export default {
               $emit('go-to-my-items');
             "
           >
-            Gå til mine genstande
+            {{ buttonText }}
           </v-btn>
         </v-card-actions>
       </div>

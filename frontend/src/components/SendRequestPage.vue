@@ -14,7 +14,8 @@ export default {
   data() {
     return {
       showExitDialog: false,
-      dialogType: "",
+      showDialog: false,
+      dialogType: null,
       availablePickupDays: [],
       availablePickupTimes: [],
       selectedPickupDay: null,
