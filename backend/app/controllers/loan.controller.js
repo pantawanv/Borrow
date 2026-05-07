@@ -4,19 +4,30 @@ const Loan = db.loans;
 // Create and Save a new Loan
 exports.create = async (req, res) => {
     try {  
-        if (!req.body.itemId || !req.body.borrowerUserId) {    
+        if (
+            !req.body.itemId ||
+            !req.body.borrowerUserId||
+            !req.body.requestedDuration ||
+            !req.body.requestedPickupDayId ||
+            !req.body.requestedPickupTimeId ||
+            !req.body.message
+        ) {    
             return res.status(400).send({
-                message: "Item ID and Borrower User ID can not be empty!"
+                message: "Required fields cannot be empty!"
             });
         }   
         const loan = await Loan.create({
             itemId: req.body.itemId,
             borrowerUserId: req.body.borrowerUserId,
             requestedDuration: req.body.requestedDuration,
-            requestDate: req.body.requestDate,
-            approvedReturnDate: req.body.approvedReturnDate,
-            actualReturnDate: req.body.actualReturnDate,
-            status: req.body.status
+            requestedPickupDayId: req.body.requestedPickupDayId,
+            requestedPickupTimeId: req.body.requestedPickupTimeId,
+            message: req.body.message,
+            requestDate: new Date(),
+            approvedReturnDate: req.body.approvedReturnDate || null,
+            actualReturnDate: req.body.actualReturnDate || null,
+            status: req.body.status || 'Anmodet'
+
         });
         res.status(201).send(loan);
 
@@ -30,7 +41,26 @@ exports.create = async (req, res) => {
 // Retrieve all Loans
 exports.findAll = async (req, res) => {
     try {
-        const loans = await Loan.findAll();
+        const loans = await Loan.findAll({
+            include: [
+                {
+                    model: db.items,
+                    as: "item",
+                }, 
+                {
+                    model: db.users,
+                    as: "borrower",
+                }, 
+                {
+                    model: db.pickupDays,
+                    as: "requestedPickupDay"
+                },
+                {
+                    model: db.pickupTimes,
+                    as: "requestedPickupTime"
+                }
+            ]
+        });
         res.send(loans);
     } catch (err) {
         res.status(500).send({
@@ -43,7 +73,26 @@ exports.findAll = async (req, res) => {
 exports.findOne = async (req, res) => {
     try {
         const id = req.params.id;
-        const loan = await Loan.findByPk(id);
+        const loan = await Loan.findByPk(id, {
+            include: [
+                {
+                    model: db.items,
+                    as: "item",
+                }, 
+                {
+                    model: db.users,
+                    as: "borrower",
+                }, 
+                {
+                    model: db.pickupDays,
+                    as: "requestedPickupDay"
+                },
+                {
+                    model: db.pickupTimes,
+                    as: "requestedPickupTime"
+                }
+            ]
+        });
 
         if (!loan) {
             return res.status(404).send({

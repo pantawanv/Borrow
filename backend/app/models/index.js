@@ -91,6 +91,31 @@ db.loans.belongsTo(db.users, {
     as: "borrower"
 });
 
+// Loan belongs to PickupDay (requested pickup day)
+db.loans.belongsTo(db.pickupDays, {
+    foreignKey: "requestedPickupDayId",
+    as: "requestedPickupDay"
+});
+
+// Pickup Day has many Loans
+db.pickupDays.hasMany(db.loans, {
+    foreignKey: "requestedPickupDayId",
+    as: "loans",
+});
+
+
+// Loan belongs to PickupTime (requested pickup time)
+db.loans.belongsTo(db.pickupTimes, {
+    foreignKey: "requestedPickupTimeId",
+    as: "requestedPickupTime"
+});
+
+// Pickup Time has many Loans
+db.pickupTimes.hasMany(db.loans, {
+    foreignKey: "requestedPickupTimeId",
+    as: "loans",
+});
+
 // Item has many Images
 db.items.hasMany(db.images, {
     foreignKey: "itemId",

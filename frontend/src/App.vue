@@ -44,13 +44,14 @@ export default {
         name: "",
         brand: "",
         itemCondition: "",
-        maxBorrowDays: "",
+        maxBorrowDays: null,
         description: "",
         extraNotes: "",
         status: "Tilgængelig",
 
         pickupDays: [],
         pickupTimes: [],
+        message: "",
         images: [],
       },
     };
@@ -183,13 +184,14 @@ export default {
         name: "",
         brand: "",
         itemCondition: "",
-        maxBorrowDays: "",
+        maxBorrowDays: null,
         description: "",
         extraNotes: "",
         status: "Tilgængelig",
 
-        pickupDays: [],
-        pickupTimes: [],
+        pickupDays: null,
+        pickupTimes: null,
+        message: "",
         images: [],
       };
     },
@@ -242,7 +244,7 @@ export default {
 <template>
   <v-app>
     <v-app-bar class="app-bar">
-      <!-- To do: Flyt knapperne senere og fjern div -->
+      <!-- TODO: Flyt knapperne og fjern div -->
       <div class="top-items">
         <v-toolbar-title @click="currentPage = 'home'">
           Borrow
@@ -318,7 +320,8 @@ export default {
       <SendRequestPage
         v-if="currentPage === 'sendRequest'"
         :item="selectedItem"
-        @go-to-Discover="goToDiscover"
+        :itemForm="itemForm"
+        @go-to-discover="goToDiscover"
       />
     </v-main>
   </v-app>

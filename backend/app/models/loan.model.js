@@ -12,6 +12,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false
         },
+        requestedPickupDayId: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        requestedPickupTimeId: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        message: {
+        type: DataTypes.TEXT,
+        allowNull: false
+        },
         requestDate: {
         type: DataTypes.DATE,
         allowNull: false,

@@ -31,6 +31,11 @@ const db = require('./app/models/index.js');
 db.sequelize.authenticate()
 .then(() => {
     console.log("Connected to the database.");
+
+    return db.sequelize.sync({ alter: true});
+})
+.then(() => {
+    console.log("Database synced.");
 })
 .catch((err) => {
     console.log("Failed to connect to the database: " + err.message);

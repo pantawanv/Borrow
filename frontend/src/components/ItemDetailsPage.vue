@@ -133,7 +133,7 @@ export default {
         item.brand
       }}</v-card-subtitle>
       <v-card-subtitle class="item-subtitle pa-0"
-        >Antal Gange Udlånt: TO DO</v-card-subtitle
+        >Antal Gange Udlånt: // TODO</v-card-subtitle
       >
       <v-divider class="my-2" />
       <div class="info-list">
