@@ -133,9 +133,13 @@ export default {
   padding: 0 16px;
   flex-wrap: wrap;
 }
+.filter-btn-group .v-btn {
+  font-weight: normal;
+}
 
 .text-black {
   color: black;
+  font-weight: normal;
 }
 
 .item-container {

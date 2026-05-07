@@ -91,7 +91,7 @@ export default {
 
 .step-label.active {
   color: white;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .step-line {

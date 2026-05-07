@@ -10,12 +10,45 @@ export default {
   data() {
     return {
       loans: [],
+      selectedFilter: "Afventende",
+      filters: ["Afventende", "Godkendt", "Tidligere"],
     };
   },
   async mounted() {
     await this.fetchLoans();
   },
-  computed: {},
+  computed: {
+    filteredLoans() {
+      if (this.selectedFilter === "Afventende") {
+        return this.loans.filter((loan) => loan.status === "Anmodet");
+      }
+
+      if (this.selectedFilter === "Godkendt") {
+        return this.loans.filter((loan) => loan.status === "Godkendt");
+      }
+
+      if (this.selectedFilter === "Tidligere") {
+        return this.loans.filter(
+          (loan) => loan.status === "Afsluttet" || loan.status === "Afvist",
+        );
+      }
+
+      return this.loans;
+    },
+    filterCounts() {
+      return {
+        Afventende: this.loans.filter((loan) => loan.status === "Anmodet")
+          .length,
+
+        Godkendt: this.loans.filter((loan) => loan.status === "Godkendt")
+          .length,
+
+        Tidligere: this.loans.filter(
+          (loan) => loan.status === "Afsluttet" || loan.status === "Afvist",
+        ).length,
+      };
+    },
+  },
   methods: {
     async fetchLoans() {
       try {
@@ -34,7 +67,19 @@ export default {
   <v-container class="page-container pa-6">
     <h1>Anmodninger</h1>
     <p>Her kan du se og svare på dine låneanmodninger.</p>
-    <v-card v-for="loan in loans" :key="loan.id" class="request-card">
+    <div class="filter-btn-group">
+      <v-btn
+        v-for="filter in filters"
+        :key="filter"
+        rounded="xl"
+        @click="selectedFilter = filter"
+        :color="selectedFilter === filter ? 'green-lighten-1' : 'grey-darken-3'"
+        :class="selectedFilter === filter ? 'text-black' : ''"
+      >
+        {{ filter }} ({{ filterCounts[filter] }})
+      </v-btn>
+    </div>
+    <v-card v-for="loan in filteredLoans" :key="loan.id" class="request-card">
       <div class="top-items">
         <!-- TODO:Replace with actual borrower name -->
         <h4>
@@ -49,7 +94,7 @@ export default {
         <!-- TODO: Replace with actual rating -->
         <v-rating
           :model-value="4"
-          color="green-darken-1"
+          color="green-lighten-1"
           density="compact"
           size="small"
           readonly
@@ -69,7 +114,7 @@ export default {
       </p>
       <div>
         <v-btn
-          color="green-darken-1"
+          color="green-lighten-1"
           style="color: black; font-weight: normal"
           class="ma-1 btn-actions"
         >
@@ -172,5 +217,20 @@ export default {
 }
 .btn-actions {
   border-radius: 16px;
+}
+
+.filter-btn-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.filter-btn-group .v-btn {
+  font-weight: normal;
+}
+
+.text-black {
+  color: black;
 }
 </style>

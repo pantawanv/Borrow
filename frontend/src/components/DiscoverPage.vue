@@ -151,6 +151,9 @@ export default {
   flex-wrap: wrap;
   margin-top: 8px;
 }
+.filter-btn-group .v-btn {
+  font-weight: normal;
+}
 
 .filter-scroll {
   display: flex;

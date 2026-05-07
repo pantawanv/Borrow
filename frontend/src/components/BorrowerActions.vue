@@ -14,7 +14,7 @@ export default {
   <div class="btn-actions">
     <v-btn
       color="green-lighten-1"
-      style="color: black"
+      style="color: black; font-weight: normal"
       @click="$emit('go-to-send-request', item)"
     >
       Anmod om at låne

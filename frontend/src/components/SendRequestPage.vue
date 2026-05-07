@@ -254,7 +254,7 @@ export default {
     <v-btn
       block
       color="green-lighten-1"
-      style="color: black"
+      style="color: black; font-weight: normal"
       @click="sendRequest"
     >
       Send anmodning

@@ -30,7 +30,7 @@ export default {
       <v-col cols="12" md="auto">
         <v-btn
           color="green-lighten-1"
-          style="color: black"
+          style="color: black; font-weight: normal"
           @click="$emit('go-to-discover')"
         >
           Find genstande
@@ -41,6 +41,7 @@ export default {
         <v-btn
           color="grey-darken-4"
           class="text-white"
+          style="font-weight: normal"
           @click="$emit('go-to-basic-info')"
         >
           Opret ny genstand

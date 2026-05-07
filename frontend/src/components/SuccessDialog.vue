@@ -103,6 +103,7 @@ export default {
         <v-card-actions v-if="isDelete" class="justify-center mt-4 ga-3">
           <v-btn
             color="grey-darken-2"
+            style="font-weight: normal"
             variant="flat"
             @click="$emit('update:modelValue', false)"
           >
@@ -111,6 +112,7 @@ export default {
 
           <v-btn
             color="red-darken-1"
+            style="font-weight: normal"
             variant="flat"
             @click="
               $emit('confirm-delete');
@@ -125,6 +127,7 @@ export default {
         <v-card-actions v-else-if="isExit" class="justify-center mt-4 ga-3">
           <v-btn
             color="grey-darken-2"
+            style="font-weight: normal"
             variant="flat"
             @click="$emit('update:modelValue', false)"
           >
@@ -133,6 +136,7 @@ export default {
 
           <v-btn
             color="red-darken-1"
+            style="font-weight: normal"
             variant="flat"
             @click="
               $emit('update:modelValue', false);
@@ -147,6 +151,7 @@ export default {
         <v-card-actions v-else class="justify-center mt-4">
           <v-btn
             color="green-lighten-1"
+            style="font-weight: normal"
             variant="flat"
             class="confirm-btn"
             @click="

@@ -188,7 +188,12 @@ export default {
     <div class="bottom-bar">
       <v-row justify="center" align="center">
         <v-col cols="6">
-          <v-btn block color="grey-darken-4" @click="$emit('go-to-basic-info')">
+          <v-btn
+            block
+            color="grey-darken-4"
+            style="font-weight: normal"
+            @click="$emit('go-to-basic-info')"
+          >
             Tilbage
           </v-btn>
         </v-col>
@@ -197,7 +202,7 @@ export default {
           <v-btn
             block
             color="green-lighten-1"
-            style="color: black"
+            style="color: black; font-weight: normal"
             @click="validate() && $emit('go-to-confirm')"
           >
             Næste

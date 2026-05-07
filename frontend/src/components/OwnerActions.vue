@@ -36,6 +36,7 @@ export default {
 
       <v-btn
         color="green-darken-1"
+        style="font-weight: normal"
         class="save-status-btn"
         :disabled="!isStatusChanged"
         @click="$emit('update-status')"
@@ -55,7 +56,12 @@ export default {
     </div>
 
     <div class="btn-actions">
-      <v-btn @click="$emit('edit-item', item)" color="#2a2a2a" class="edit-btn">
+      <v-btn
+        @click="$emit('edit-item', item)"
+        color="#2a2a2a"
+        class="edit-btn"
+        style="font-weight: normal"
+      >
         <v-icon>mdi-pencil-outline</v-icon>
         Rediger
       </v-btn>
@@ -64,6 +70,7 @@ export default {
         @click="$emit('delete-item', item.id)"
         color="#2a2a2a"
         class="delete-btn"
+        style="font-weight: normal"
       >
         <v-icon>mdi-delete-outline</v-icon>
         Slet
