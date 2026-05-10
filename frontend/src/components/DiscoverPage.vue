@@ -21,7 +21,8 @@ export default {
         { label: "Sport", value: 5 },
         { label: "Transport", value: 6 },
         { label: "Underholdning", value: 7 },
-        { label: "Andet", value: 8 },
+        { label: "Hobby", value: 8 },
+        { label: "Andet", value: 9 },
       ],
     };
   },
@@ -64,7 +65,8 @@ export default {
         Transport: this.items.filter((item) => item.categoryId === 6).length,
         Underholdning: this.items.filter((item) => item.categoryId === 7)
           .length,
-        Andet: this.items.filter((item) => item.categoryId === 8).length,
+        Hobby: this.items.filter((item) => item.categoryId === 8).length,
+        Andet: this.items.filter((item) => item.categoryId === 9).length,
       };
     },
   },

@@ -29,7 +29,7 @@ export default {
 
       if (this.selectedFilter === "Tidligere") {
         return this.loans.filter(
-          (loan) => loan.status === "Afsluttet" || loan.status === "Afvist",
+          (loan) => loan.status === "Returneret" || loan.status === "Afvist",
         );
       }
 
@@ -44,7 +44,7 @@ export default {
           .length,
 
         Tidligere: this.loans.filter(
-          (loan) => loan.status === "Afsluttet" || loan.status === "Afvist",
+          (loan) => loan.status === "Returneret" || loan.status === "Afvist",
         ).length,
       };
     },
@@ -109,7 +109,7 @@ export default {
       </p>
       <p class="details-text">
         <v-icon size="18" class="mr-1">mdi-calendar</v-icon>
-        Ønsket afhentning: {{ loan.requestedPickupDay?.name }} -
+        Ønsket afhentning: {{ loan.requestedPickupDay?.name }} •
         {{ loan.requestedPickupTime?.name }}
       </p>
       <div>

@@ -29,7 +29,8 @@ export default {
         5: "Sport",
         6: "Transport",
         7: "Underholdning",
-        8: "Andet",
+        8: "Hobby",
+        9: "Andet",
       };
       return map[this.itemForm.categoryId] || "Ukendt";
     },

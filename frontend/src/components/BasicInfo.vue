@@ -17,7 +17,8 @@ export default {
         { id: 5, name: "Sport" },
         { id: 6, name: "Transport" },
         { id: 7, name: "Underholdning" },
-        { id: 8, name: "Andet" },
+        { id: 8, name: "Hobby" },
+        { id: 9, name: "Andet" },
       ],
       loanPeriods: [
         { title: "1 dag", value: 1 },
