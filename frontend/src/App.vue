@@ -12,6 +12,10 @@ import SuccessDialog from "@/components/SuccessDialog.vue";
 import { imageService } from "@/services/imageService.js";
 import SendRequestPage from "@/components/SendRequestPage.vue";
 import RequestsPage from "@/components/RequestsPage.vue";
+import LoginPage from "@/components/LoginPage.vue";
+import RegisterPage from "@/components/RegisterPage.vue";
+import { auth } from "@/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default {
   name: "App",
@@ -28,6 +32,8 @@ export default {
     SuccessDialog,
     SendRequestPage,
     RequestsPage,
+    LoginPage,
+    RegisterPage,
   },
 
   data() {
@@ -57,6 +63,11 @@ export default {
         images: [],
       },
     };
+  },
+  mounted() {
+    onAuthStateChanged(auth, (user) => {
+      this.currentUser = user;
+    });
   },
 
   methods: {
@@ -268,12 +279,14 @@ export default {
       </div>
     </v-app-bar>
     <v-main>
-      <Home
+      <RegisterPage />
+      <!--   <LoginPage /> -->
+      <!--   <Home
         v-if="currentPage === 'home'"
         @go-to-basic-info="goToBasicInfo(true)"
         @go-to-discover="goToDiscover"
         @go-to-requests="goToRequests"
-      />
+      /> -->
 
       <!-- Page navigation -->
 

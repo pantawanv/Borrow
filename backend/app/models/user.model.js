@@ -1,6 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
 
     const User = sequelize.define("user", {
+    firebaseUid: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
        firstName: {
         type: DataTypes.STRING(100),
         allowNull: false
@@ -16,10 +21,6 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
             isEmail: true
         }     
-        },
-        passwordHash: {
-        type: DataTypes.STRING(200),
-        allowNull: false
         },
         address: {
         type: DataTypes.STRING(200),
