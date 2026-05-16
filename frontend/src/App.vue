@@ -49,9 +49,11 @@ export default {
       showSuccessDialog: false,
       dialogType: null,
       selectedDeleteId: null,
+      currentUser: null,
+      backendUser: null,
 
       itemForm: {
-        ownerUserId: 1,
+        ownerUserId: null,
         categoryId: null,
         name: "",
         brand: "",
@@ -79,8 +81,12 @@ export default {
     };
   },
   mounted() {
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       this.currentUser = user;
+
+      if (user) {
+        this.backendUser = await userService.getByFirebaseUid(user.uid);
+      }
     });
   },
 
@@ -143,7 +149,7 @@ export default {
         // UPDATE existing item
         if (this.editingItemId) {
           await itemService.update(this.editingItemId, {
-            ownerUserId: this.itemForm.ownerUserId,
+            ownerUserId: this.backendUser?.id,
             categoryId: this.itemForm.categoryId,
             name: this.itemForm.name,
             brand: this.itemForm.brand,
@@ -165,7 +171,7 @@ export default {
         // CREATE new item
         else {
           const created = await itemService.create({
-            ownerUserId: this.itemForm.ownerUserId,
+            ownerUserId: this.backendUser.id,
             categoryId: this.itemForm.categoryId,
             name: this.itemForm.name,
             brand: this.itemForm.brand,
@@ -216,7 +222,7 @@ export default {
 
     resetForm() {
       this.itemForm = {
-        ownerUserId: 1,
+        ownerUserId: this.backendUser?.id,
         categoryId: null,
         name: "",
         brand: "",
@@ -395,6 +401,7 @@ export default {
       <ItemDetailsPage
         v-if="currentPage === 'itemDetails'"
         :item="selectedItem"
+        :currentUserId="backendUser?.id"
         @edit-item="editItem"
         @delete-item="deleteItem"
         @go-to-my-items="goToMyItems"

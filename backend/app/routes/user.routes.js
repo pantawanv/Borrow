@@ -6,6 +6,8 @@ module.exports = app => {
 
      router.get("/", users.findAll);
 
+     router.get("/firebase/:firebaseUid", users.findByFirebaseUid);
+
      router.get("/:id", users.findOne);
 
      router.put("/:id", users.update);

@@ -17,4 +17,14 @@ export const userService = {
         return await response.json();
 
     },
+
+    async getByFirebaseUid(firebaseUid) {
+        const response = await fetch(`${BASE_URL}/firebase/${firebaseUid}`);
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch user by Firebase UID");
+        }
+
+        return await response.json();
+    }
 };

@@ -67,6 +67,28 @@ exports.findOne = async (req, res) => {
     } 
 };
 
+exports.findByFirebaseUid = async (req, res) => {
+    const firebaseUid = req.params.firebaseUid;
+
+    try {
+        const user = await User.findOne({
+            where: { firebaseUid: firebaseUid}
+        });
+
+        if (!user) {
+            return res.status(404).send({
+                message: `Cannot find User with Firebase UID=${firebaseUid}.`
+            })
+        }
+        res.send(user);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message ||
+            "Error retrieving user with Firebase UID=" + firebaseUid
+        });
+    }
+};
+
 // Update User 
 exports.update = async (req, res) => {
      const id = req.params.id;

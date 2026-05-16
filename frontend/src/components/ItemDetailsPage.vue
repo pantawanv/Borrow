@@ -81,7 +81,7 @@ export default {
     },
     // Placeholder for current user check - replace with actual auth logic
     isOwner() {
-      const currentUserId = 2;
+      const currentUserId = this.currentUserId;
 
       return this.item.ownerUserId === currentUserId;
     },
@@ -90,6 +90,7 @@ export default {
   emits: ["go-to-my-items", "edit-item", "delete-item", "go-to-send-request"],
   props: {
     item: Object,
+    currentUserId: Number,
   },
 };
 </script>
