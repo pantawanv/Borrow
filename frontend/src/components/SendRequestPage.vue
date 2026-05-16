@@ -7,6 +7,7 @@ export default {
   props: {
     item: Object,
     itemForm: Object,
+    currentUserId: Number,
   },
   components: {
     SuccessDialog,
@@ -119,7 +120,7 @@ export default {
       try {
         await loanService.create({
           itemId: this.item.id,
-          borrowerUserId: 1, //TODO: Replace with actual user id
+          borrowerUserId: this.currentUserId,
           requestedDuration: this.selectedLoanPeriod,
           requestedPickupDayId: this.selectedPickupDay,
           requestedPickupTimeId: this.selectedPickupTime,

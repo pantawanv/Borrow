@@ -362,6 +362,7 @@ export default {
         v-if="currentPage === 'requests'"
         :item="selectedItem"
         :itemForm="itemForm"
+        :currentUserId="backendUser?.id"
       />
 
       <BasicInfo
@@ -422,6 +423,7 @@ export default {
         v-if="currentPage === 'sendRequest'"
         :item="selectedItem"
         :itemForm="itemForm"
+        :currentUserId="backendUser?.id"
         @go-to-discover="goToDiscover"
       />
 

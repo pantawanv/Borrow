@@ -5,6 +5,7 @@ export default {
   props: {
     item: Object,
     itemForm: Object,
+    currentUserId: Number,
   },
   components: {},
   data() {
@@ -19,31 +20,38 @@ export default {
   },
   computed: {
     filteredLoans() {
+      let result = this.loans.filter(
+        (loan) => loan.item?.ownerUserId === this.currentUserId,
+      );
+
       if (this.selectedFilter === "Afventende") {
-        return this.loans.filter((loan) => loan.status === "Anmodet");
+        return result.filter((loan) => loan.status === "Anmodet");
       }
 
       if (this.selectedFilter === "Godkendt") {
-        return this.loans.filter((loan) => loan.status === "Godkendt");
+        return result.filter((loan) => loan.status === "Godkendt");
       }
 
       if (this.selectedFilter === "Tidligere") {
-        return this.loans.filter(
+        return result.filter(
           (loan) => loan.status === "Returneret" || loan.status === "Afvist",
         );
       }
 
-      return this.loans;
+      return result;
     },
     filterCounts() {
+      const userLoans = this.loans.filter(
+        (loan) => loan.item?.ownerUserId === this.currentUserId,
+      );
+
       return {
-        Afventende: this.loans.filter((loan) => loan.status === "Anmodet")
+        Afventende: userLoans.filter((loan) => loan.status === "Anmodet")
           .length,
 
-        Godkendt: this.loans.filter((loan) => loan.status === "Godkendt")
-          .length,
+        Godkendt: userLoans.filter((loan) => loan.status === "Godkendt").length,
 
-        Tidligere: this.loans.filter(
+        Tidligere: userLoans.filter(
           (loan) => loan.status === "Returneret" || loan.status === "Afvist",
         ).length,
       };
@@ -53,7 +61,17 @@ export default {
     async fetchLoans() {
       try {
         this.loans = await loanService.getAll();
-        console.log(this.loans);
+
+        console.log("Current user:", this.currentUserId);
+
+        this.loans.forEach((loan) => {
+          console.log({
+            loanId: loan.id,
+            borrowerId: loan.borrowerUserId,
+            itemOwnerId: loan.item?.ownerUserId,
+            itemName: loan.item?.name,
+          });
+        });
       } catch (error) {
         console.error("Error fetching loans:", error);
       }
@@ -83,7 +101,7 @@ export default {
       <div class="top-items">
         <!-- TODO:Replace with actual borrower name -->
         <h4>
-          Bruger {{ loan.borrowerUserId }}
+          {{ loan.borrower?.firstName }} {{ loan.borrower?.lastName }}
           <span class="normal-text">vil låne </span>
           <strong>{{ loan.item?.name }}</strong>
         </h4>
@@ -138,8 +156,8 @@ export default {
           Foreslå andet
         </v-btn>
       </div>
-    </v-card> </v-container
-  >1
+    </v-card>
+  </v-container>
 </template>
 
 <style scoped>
