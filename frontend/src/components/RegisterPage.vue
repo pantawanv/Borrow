@@ -1,28 +1,29 @@
 <script>
 import { authService } from "@/services/authService";
+import SuccessDialog from "@/components/SuccessDialog.vue";
 export default {
   name: "",
-  components: {},
+  components: {
+    SuccessDialog,
+  },
   data() {
     return {
-      email: "",
-      password: "",
-      confirmPassword: "",
+      showDialog: false,
+      dialogType: null,
     };
   },
   computed: {},
   methods: {
     async register() {
-      try {
-        const user = await authService.register(this.email, this.password);
-
-        console.log("User registered:", user);
-      } catch (error) {
-        console.error("Registration error:", error);
-      }
+      await this.$emit("save-user");
+      this.dialogType = "account-created";
+      this.showDialog = true;
     },
   },
   watch: {},
+  props: {
+    userForm: Object,
+  },
 };
 </script>
 
@@ -48,7 +49,7 @@ export default {
             variant="solo"
             class="input"
             hide-details
-            v-model="firstName"
+            v-model="userForm.firstName"
           ></v-text-field>
         </div>
 
@@ -62,7 +63,7 @@ export default {
             variant="solo"
             class="input"
             hide-details
-            v-model="lastName"
+            v-model="userForm.lastName"
           ></v-text-field>
         </div>
 
@@ -76,7 +77,7 @@ export default {
             variant="solo"
             class="input"
             hide-details
-            v-model="address"
+            v-model="userForm.address"
           ></v-text-field>
         </div>
 
@@ -90,7 +91,7 @@ export default {
             variant="solo"
             class="input"
             hide-details
-            v-model="phoneNumber"
+            v-model="userForm.phoneNumber"
           ></v-text-field>
         </div>
 
@@ -104,7 +105,7 @@ export default {
             variant="solo"
             class="input"
             hide-details
-            v-model="email"
+            v-model="userForm.email"
           ></v-text-field>
         </div>
 
@@ -118,7 +119,7 @@ export default {
             variant="solo"
             class="input"
             hide-details
-            v-model="password"
+            v-model="userForm.password"
           ></v-text-field>
         </div>
 
@@ -132,7 +133,7 @@ export default {
             variant="solo"
             class="input"
             hide-details
-            v-model="confirmPassword"
+            v-model="userForm.confirmPassword"
           ></v-text-field>
         </div>
         <div class="login-btn">
@@ -145,6 +146,11 @@ export default {
           >
         </div>
       </v-card>
+      <SuccessDialog
+        v-model="showDialog"
+        :dialogType="dialogType"
+        @go-to-login="$emit('go-to-login')"
+      />
     </div>
   </v-container>
 </template>

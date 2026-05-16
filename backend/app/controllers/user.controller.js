@@ -4,30 +4,32 @@ const User = db.users;
 // Create and Save a new User
 exports.create = async (req, res) => {
     try {
-        if(!req.body.firstName || !req.body.lastName) {
+
+        if (!req.body.firstName || !req.body.lastName) {
             return res.status(400).send({
                 message: "First name and last name can not be empty!"
             });
         }
 
         const user = await User.create({
+            firebaseUid: req.body.firebaseUid,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.email,
-            passwordHash: req.body.passwordHash,
             address: req.body.address,
             phoneNumber: req.body.phoneNumber
-        })
+        });
 
         res.status(201).send(user);
 
     } catch (err) {
+
+        console.error(err);
+
         res.status(500).send({
             message: err.message || "Error creating user"
         });
-
     }
-
 };
 
 // Retrieve all Users
@@ -50,7 +52,7 @@ exports.findOne = async (req, res) => {
     try {
         const user = await User.findByPk(id);
 
-        if (user) {
+        if (!user) {
             return res.status(404).send({
                 message: `Cannot find User with id=${id}.`
             });

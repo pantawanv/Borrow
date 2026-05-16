@@ -15,7 +15,12 @@ export default {
     dialogType: String,
   },
 
-  emits: ["update:modelValue", "go-to-my-items", "confirm-delete"],
+  emits: [
+    "update:modelValue",
+    "go-to-my-items",
+    "confirm-delete",
+    "go-to-login",
+  ],
 
   computed: {
     dialogTitle() {
@@ -25,6 +30,7 @@ export default {
       if (this.dialogType === "exit-edit") return "Annuller redigering?";
       if (this.dialogType === "exit-request") return "Annuller anmodning?";
       if (this.dialogType === "request-sent") return "Anmodning Sendt!";
+      if (this.dialogType === "account-created") return "Konto Oprettet!";
       return "Genstand Oprettet!";
     },
 
@@ -53,6 +59,10 @@ export default {
         return "Er du sikker på, at du vil annullere anmodningen? Dine indtastede oplysninger går tabt.";
       }
 
+      if (this.dialogType === "account-created") {
+        return "Din konto er blevet oprettet. Du kan nu logge ind og begynde at dele dine genstande med andre.";
+      }
+
       return "Tak fordi du deler din genstand med andre. Den er nu synlig for andre brugere, og du kan administrere den under 'Mine genstande'.";
     },
 
@@ -70,7 +80,21 @@ export default {
       if (this.dialogType === "request-sent") {
         return "Gå til 'Find genstande'";
       }
+      if (this.dialogType === "account-created") {
+        return "Gå til login";
+      }
       return "Gå til mine genstande";
+    },
+  },
+  methods: {
+    handleConfirm() {
+      this.$emit("update:modelValue", false);
+
+      if (this.dialogType === "account-created") {
+        this.$emit("go-to-login");
+      } else {
+        this.$emit("go-to-my-items");
+      }
     },
   },
 };
@@ -154,10 +178,7 @@ export default {
             style="font-weight: normal"
             variant="flat"
             class="confirm-btn"
-            @click="
-              $emit('update:modelValue', false);
-              $emit('go-to-my-items');
-            "
+            @click="handleConfirm"
           >
             {{ buttonText }}
           </v-btn>

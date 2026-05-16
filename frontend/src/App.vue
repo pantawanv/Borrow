@@ -15,7 +15,11 @@ import RequestsPage from "@/components/RequestsPage.vue";
 import LoginPage from "@/components/LoginPage.vue";
 import RegisterPage from "@/components/RegisterPage.vue";
 import { auth } from "@/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { userService } from "@/services/userService.js";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 export default {
   name: "App",
@@ -38,7 +42,7 @@ export default {
 
   data() {
     return {
-      currentPage: "home",
+      currentPage: "login",
       currentStep: 1,
       selectedItem: null,
       editingItemId: null,
@@ -61,6 +65,16 @@ export default {
         pickupTimes: [],
         message: "",
         images: [],
+      },
+
+      userForm: {
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        address: "",
+        phoneNumber: "",
       },
     };
   },
@@ -114,6 +128,12 @@ export default {
 
     goToRequests() {
       this.currentPage = "requests";
+    },
+    goToRegister() {
+      this.currentPage = "register";
+    },
+    goToLogin() {
+      this.currentPage = "login";
     },
 
     async saveItem() {
@@ -255,6 +275,44 @@ export default {
 
       this.goToBasicInfo();
     },
+    async saveUser() {
+      try {
+        // Create user in Firebase Authentication
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          this.userForm.email,
+          this.userForm.password,
+        );
+
+        // Get Firebase UID
+        const firebaseUid = userCredential.user.uid;
+
+        // Save user in backend database
+        await userService.create({
+          firebaseUid: firebaseUid,
+          firstName: this.userForm.firstName,
+          lastName: this.userForm.lastName,
+          email: this.userForm.email,
+          address: this.userForm.address,
+          phoneNumber: this.userForm.phoneNumber,
+        });
+
+        this.userForm = {
+          firstName: "",
+          lastName: "",
+          address: "",
+          phoneNumber: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        };
+
+        console.log("User registered and saved to database");
+      } catch (error) {
+        console.error("Error creating user:", error);
+        console.error("Error details:", error.response?.data || error.message);
+      }
+    },
   },
 };
 </script>
@@ -279,14 +337,12 @@ export default {
       </div>
     </v-app-bar>
     <v-main>
-      <RegisterPage />
-      <!--   <LoginPage /> -->
-      <!--   <Home
+      <Home
         v-if="currentPage === 'home'"
         @go-to-basic-info="goToBasicInfo(true)"
         @go-to-discover="goToDiscover"
         @go-to-requests="goToRequests"
-      /> -->
+      />
 
       <!-- Page navigation -->
 
@@ -350,6 +406,7 @@ export default {
         :dialogType="dialogType"
         @go-to-my-items="goToMyItems"
         @confirm-delete="confirmDelete"
+        @go-to-login="goToLogin"
       />
 
       <SendRequestPage
@@ -357,6 +414,19 @@ export default {
         :item="selectedItem"
         :itemForm="itemForm"
         @go-to-discover="goToDiscover"
+      />
+
+      <RegisterPage
+        v-if="currentPage === 'register'"
+        :userForm="userForm"
+        @save-user="saveUser"
+        @go-to-login="goToLogin"
+      />
+
+      <LoginPage
+        v-if="currentPage === 'login'"
+        @go-to-register="goToRegister"
+        @go-to-home="goToHome"
       />
     </v-main>
   </v-app>

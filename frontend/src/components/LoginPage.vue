@@ -14,6 +14,7 @@ export default {
     async login() {
       try {
         const user = await authService.login(this.email, this.password);
+        this.$emit("go-to-home");
 
         console.log("User logged in:", user);
       } catch (error) {
@@ -21,7 +22,7 @@ export default {
       }
     },
   },
-  watch: {},
+  emits: ["go-to-home", "go-to-register"],
 };
 </script>
 
@@ -68,7 +69,14 @@ export default {
           >
         </div>
         <p class="text">
-          Har du ingen konto? <a href="/register">Tilmeld dig her</a>
+          Har du ingen konto?
+          <v-btn
+            variant="text"
+            class="register-btn"
+            @click="$emit('go-to-register')"
+          >
+            Tilmed dig her
+          </v-btn>
         </p>
       </v-card>
     </div>
@@ -168,5 +176,14 @@ export default {
 
 .text {
   font-size: 14px;
+}
+
+.register-btn {
+  font-size: 14px;
+  font-weight: normal;
+  color: #4caf50;
+  text-transform: none;
+  padding: 0;
+  min-width: 0;
 }
 </style>
