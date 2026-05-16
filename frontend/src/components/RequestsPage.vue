@@ -11,6 +11,7 @@ export default {
   data() {
     return {
       loans: [],
+      selectedTab: "received",
       selectedFilter: "Afventende",
       filters: ["Afventende", "Godkendt", "Tidligere"],
     };
@@ -20,9 +21,19 @@ export default {
   },
   computed: {
     filteredLoans() {
-      let result = this.loans.filter(
-        (loan) => loan.item?.ownerUserId === this.currentUserId,
-      );
+      let result = [];
+
+      if (this.selectedTab === "received") {
+        result = this.loans.filter(
+          (loan) => loan.item?.ownerUserId === this.currentUserId,
+        );
+      }
+
+      if (this.selectedTab === "sent") {
+        result = this.loans.filter(
+          (loan) => loan.borrowerUserId === this.currentUserId,
+        );
+      }
 
       if (this.selectedFilter === "Afventende") {
         return result.filter((loan) => loan.status === "Anmodet");
@@ -56,6 +67,16 @@ export default {
         ).length,
       };
     },
+    receivedCount() {
+      return this.loans.filter(
+        (loan) => loan.item?.ownerUserId === this.currentUserId,
+      ).length;
+    },
+    sentCount() {
+      return this.loans.filter(
+        (loan) => loan.borrowerUserId === this.currentUserId,
+      ).length;
+    },
   },
   methods: {
     async fetchLoans() {
@@ -84,7 +105,16 @@ export default {
 <template>
   <v-container class="page-container pa-6">
     <h1>Anmodninger</h1>
-    <p>Her kan du se og svare på dine låneanmodninger.</p>
+    <p>Her kan du se dine modtagne og sendte låneanmodninger.</p>
+    <div class="tabs-wrapper">
+      <v-tabs v-model="selectedTab" hide-slider grow class="custom-tabs">
+        <v-tab value="received" class="custom-tab">
+          Modtaget ({{ receivedCount }})
+        </v-tab>
+
+        <v-tab value="sent" class="custom-tab"> Sendt ({{ sentCount }})</v-tab>
+      </v-tabs>
+    </div>
     <div class="filter-btn-group">
       <v-btn
         v-for="filter in filters"
@@ -99,10 +129,15 @@ export default {
     </div>
     <v-card v-for="loan in filteredLoans" :key="loan.id" class="request-card">
       <div class="top-items">
-        <!-- TODO:Replace with actual borrower name -->
-        <h4>
-          {{ loan.borrower?.firstName }} {{ loan.borrower?.lastName }}
+        <h4 v-if="selectedTab === 'received'">
+          {{ loan.borrower?.firstName }}
+          {{ loan.borrower?.lastName }}
           <span class="normal-text">vil låne </span>
+          <strong>{{ loan.item?.name }}</strong>
+        </h4>
+
+        <h4 v-else>
+          Du vil låne
           <strong>{{ loan.item?.name }}</strong>
         </h4>
         <!-- TODO: Replace with actual status and style accordingly -->
@@ -130,23 +165,25 @@ export default {
         Ønsket afhentning: {{ loan.requestedPickupDay?.name }} •
         {{ loan.requestedPickupTime?.name }}
       </p>
-      <div>
+      <div v-if="selectedTab === 'received'">
         <v-btn
           color="green-lighten-1"
           style="color: black; font-weight: normal"
           class="ma-1 btn-actions"
         >
           <v-icon size="18" class="mr-1">mdi-check</v-icon>
-          Acceptér</v-btn
-        >
+          Acceptér
+        </v-btn>
+
         <v-btn
           color="grey-darken-4"
           style="font-weight: normal"
           class="ma-1 btn-actions"
         >
           <v-icon size="18" class="mr-1">mdi-close</v-icon>
-          Afvis</v-btn
-        >
+          Afvis
+        </v-btn>
+
         <v-btn
           color="grey-darken-4"
           style="font-weight: normal"
@@ -154,6 +191,17 @@ export default {
         >
           <v-icon size="18" class="mr-1">mdi-lightbulb-outline</v-icon>
           Foreslå andet
+        </v-btn>
+      </div>
+
+      <div v-else>
+        <v-btn
+          color="red-darken-1"
+          style="font-weight: normal"
+          class="ma-1 btn-actions"
+        >
+          <v-icon size="18" class="mr-1">mdi-close</v-icon>
+          Annullér anmodning
         </v-btn>
       </div>
     </v-card>
@@ -250,5 +298,29 @@ export default {
 
 .text-black {
   color: black;
+}
+
+.tabs-wrapper {
+  background-color: #1f1f1f;
+  border-radius: 14px;
+  padding: 3px;
+  margin-bottom: 20px;
+}
+
+.custom-tabs {
+  width: 100%;
+}
+
+.custom-tab {
+  min-height: 36px;
+  border-radius: 10px;
+  text-transform: none;
+  font-weight: 500;
+  color: #9e9e9e;
+}
+
+.custom-tab.v-tab--selected {
+  background-color: #121212;
+  color: white;
 }
 </style>
