@@ -354,6 +354,7 @@ export default {
 
       <DiscoverPage
         v-if="currentPage === 'discover'"
+        :currentUserId="backendUser?.id"
         @view-item-details="viewItemDetails"
       />
 
@@ -394,6 +395,7 @@ export default {
 
       <MyItems
         v-if="currentPage === 'myItems'"
+        :currentUserId="backendUser?.id"
         @view-item-details="viewItemDetails"
         @go-to-basic-info="goToBasicInfo(true)"
       />

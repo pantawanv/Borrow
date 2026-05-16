@@ -3,6 +3,9 @@ import ItemPreviewCard from "@/components/ItemPreviewCard.vue";
 import { itemService } from "@/services/itemService.js";
 
 export default {
+  props: {
+    currentUserId: Number,
+  },
   components: {
     ItemPreviewCard,
   },
@@ -35,23 +38,31 @@ export default {
   },
   computed: {
     filteredItems() {
+      let result = this.items.filter(
+        (item) => item.ownerUserId === this.currentUserId,
+      );
+
       if (this.selectedFilter === "Alle") {
-        return this.items;
+        return result;
       }
 
-      return this.items.filter((item) => item.status === this.selectedFilter);
+      return result.filter((item) => item.status === this.selectedFilter);
     },
 
     filterCounts() {
-      return {
-        Alle: this.items.length,
+      const userItems = this.items.filter(
+        (item) => item.ownerUserId === this.currentUserId,
+      );
 
-        Tilgængelig: this.items.filter((item) => item.status === "Tilgængelig")
+      return {
+        Alle: userItems.length,
+
+        Tilgængelig: userItems.filter((item) => item.status === "Tilgængelig")
           .length,
 
-        Udlånt: this.items.filter((item) => item.status === "Udlånt").length,
+        Udlånt: userItems.filter((item) => item.status === "Udlånt").length,
 
-        Inaktiv: this.items.filter((item) => item.status === "Inaktiv").length,
+        Inaktiv: userItems.filter((item) => item.status === "Inaktiv").length,
       };
     },
   },

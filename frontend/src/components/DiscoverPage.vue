@@ -3,6 +3,9 @@ import ItemPreviewCard from "./ItemPreviewCard.vue";
 import { itemService } from "@/services/itemService.js";
 export default {
   name: "",
+  props: {
+    currentUserId: Number,
+  },
   components: {
     ItemPreviewCard,
   },
@@ -32,7 +35,12 @@ export default {
 
   computed: {
     filteredItems() {
-      let result = this.items;
+      console.log("Current user:", this.currentUserId);
+      console.log("Items:", this.items);
+
+      let result = this.items.filter(
+        (item) => item.ownerUserId !== this.currentUserId,
+      );
 
       // Category filter
       if (this.selectedFilter.value !== null) {
