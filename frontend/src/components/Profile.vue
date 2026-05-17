@@ -2,6 +2,7 @@
 import userImage from "@/assets/images/user.png";
 import { userService } from "../services/userService";
 import CoffeeReward from "@/components/CoffeeReward.vue";
+import RewardTicket from "@/components/RewardTicket.vue";
 export default {
   name: "",
   props: {
@@ -10,10 +11,12 @@ export default {
 
   components: {
     CoffeeReward,
+    RewardTicket,
   },
   data() {
     return {
       userImage,
+      showRewardTicket: false,
     };
   },
   computed: {},
@@ -61,7 +64,7 @@ export default {
         </v-btn>
       </div>
     </v-card>
-    <h3>Din påvirkning</h3>
+    <h3>Din aktivitet</h3>
     <v-row class="impact-stats">
       <v-col cols="12" md="4">
         <v-card class="impact-card">
@@ -104,9 +107,9 @@ export default {
           lokale kaffested!
         </p>
       </v-card-text>
-      <v-card-actions class="justify-center">
+      <div class="coffee-animation">
         <CoffeeReward />
-      </v-card-actions>
+      </div>
     </v-card>
 
     <v-card class="coffee-reward mt-6">
@@ -131,7 +134,11 @@ export default {
               </div>
             </div>
 
-            <v-btn class="redeem-btn" color="green-lighten-1">
+            <v-btn
+              @click="showRewardTicket = true"
+              class="redeem-btn"
+              color="green-lighten-1"
+            >
               <v-icon class="mr-1">mdi-qrcode</v-icon>
               Indløs
             </v-btn>
@@ -152,7 +159,11 @@ export default {
               </div>
             </div>
 
-            <v-btn class="redeem-btn" color="green-lighten-1">
+            <v-btn
+              @click="showRewardTicket = true"
+              class="redeem-btn"
+              color="green-lighten-1"
+            >
               <v-icon class="mr-1">mdi-qrcode</v-icon>
               Indløs
             </v-btn>
@@ -173,6 +184,25 @@ export default {
         </p>
       </v-card-text>
     </v-card>
+    <v-dialog v-model="showRewardTicket" max-width="500">
+      <v-card class="reward-dialog">
+        <RewardTicket />
+        <div class="bottom-bar">
+          <v-btn block color="green-lighten-1" class="dialog-btn used-btn">
+            Markér som brugt
+          </v-btn>
+
+          <v-btn
+            block
+            color="grey-darken-4"
+            class="dialog-btn"
+            @click="showRewardTicket = false"
+          >
+            Luk
+          </v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -327,5 +357,39 @@ export default {
   margin-top: 4px;
   margin-left: 30px;
   font-size: 13px;
+}
+
+.coffee-animation {
+  display: flex;
+  justify-content: center;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+.reward-dialog {
+  border-radius: 20px;
+  background-color: #141414;
+  padding: 20px;
+}
+
+.bottom-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  margin: 28px auto 0 auto;
+}
+
+.dialog-btn {
+  width: 100%;
+  border-radius: 14px;
+  font-weight: normal;
+}
+
+.used-btn {
+  color: black;
 }
 </style>

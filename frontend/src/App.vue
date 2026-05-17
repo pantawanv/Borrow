@@ -455,7 +455,6 @@ export default {
         v-if="currentPage === 'profile'"
         :currentUser="currentUser"
         :user="backendUser"
-        @go-to-home="goToHome"
       />
     </v-main>
   </v-app>
