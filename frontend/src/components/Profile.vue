@@ -17,11 +17,37 @@ export default {
     return {
       userImage,
       showRewardTicket: false,
+
+      selectedReward: null,
+
+      rewards: [
+        {
+          id: 1,
+          title: "Gratis kop kaffe",
+          date: "10.5.2026",
+        },
+        {
+          id: 2,
+          title: "Gratis kop kaffe",
+          date: "17.5.2026",
+        },
+      ],
     };
   },
-  computed: {},
-  methods: {},
-  watch: {},
+  methods: {
+    openReward(reward) {
+      this.selectedReward = reward;
+      this.showRewardTicket = true;
+    },
+
+    markRewardAsUsed() {
+      this.rewards = this.rewards.filter(
+        (reward) => reward.id !== this.selectedReward.id,
+      );
+
+      this.showRewardTicket = false;
+    },
+  },
 };
 </script>
 
@@ -116,10 +142,14 @@ export default {
       <v-card-text>
         <h3>
           <v-icon size="30" class="mr-1">mdi-party-popper</v-icon>
-          Dine belønninger (2)
+          Dine belønninger
         </h3>
-        <div class="reward-list">
-          <v-card class="reward-item">
+        <div v-if="rewards.length > 0" class="reward-list">
+          <v-card
+            v-for="reward in rewards"
+            :key="reward.id"
+            class="reward-item"
+          >
             <div class="reward-left">
               <div class="reward-text">
                 <div class="reward-header">
@@ -127,15 +157,17 @@ export default {
                     mdi-coffee-outline
                   </v-icon>
 
-                  <h4 class="reward-title">Gratis kop kaffe</h4>
+                  <h4 class="reward-title">
+                    {{ reward.title }}
+                  </h4>
                 </div>
 
-                <p class="reward-date">Optjent 17.5.2026</p>
+                <p class="reward-date">Optjent {{ reward.date }}</p>
               </div>
             </div>
 
             <v-btn
-              @click="showRewardTicket = true"
+              @click="openReward(reward)"
               class="redeem-btn"
               color="green-lighten-1"
             >
@@ -143,31 +175,14 @@ export default {
               Indløs
             </v-btn>
           </v-card>
+        </div>
 
-          <v-card class="reward-item">
-            <div class="reward-left">
-              <div class="reward-text">
-                <div class="reward-header">
-                  <v-icon size="22" color="green-lighten-1">
-                    mdi-coffee-outline
-                  </v-icon>
-
-                  <h4 class="reward-title">Gratis kop kaffe</h4>
-                </div>
-
-                <p class="reward-date">Optjent 17.5.2026</p>
-              </div>
-            </div>
-
-            <v-btn
-              @click="showRewardTicket = true"
-              class="redeem-btn"
-              color="green-lighten-1"
-            >
-              <v-icon class="mr-1">mdi-qrcode</v-icon>
-              Indløs
-            </v-btn>
-          </v-card>
+        <div v-else class="empty-rewards">
+          <p>
+            Du har ingen belønninger lige nu.
+            <br />
+            Begynd at låne dine genstande ud for at optjene nye belønninger.
+          </p>
         </div>
       </v-card-text>
     </v-card>
@@ -188,7 +203,12 @@ export default {
       <v-card class="reward-dialog">
         <RewardTicket />
         <div class="bottom-bar">
-          <v-btn block color="green-lighten-1" class="dialog-btn used-btn">
+          <v-btn
+            block
+            color="green-lighten-1"
+            class="dialog-btn used-btn"
+            @click="markRewardAsUsed"
+          >
             Markér som brugt
           </v-btn>
 
@@ -391,5 +411,9 @@ h3 {
 
 .used-btn {
   color: black;
+}
+
+.empty-rewards {
+  color: #9e9e9e;
 }
 </style>

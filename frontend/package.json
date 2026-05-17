@@ -17,6 +17,7 @@
   "dependencies": {
     "@fontsource/roboto": "^5.2.10",
     "@mdi/font": "7.4.47",
+    "canvas-confetti": "^1.9.4",
     "firebase": "^12.13.0",
     "lottie-web": "^5.13.0",
     "vue": "^3.5.30",

@@ -1,12 +1,19 @@
 <script>
 import congratsIcon from "@/assets/images/party-popper.png";
+import { Vue3Lottie } from "vue3-lottie";
+import coffeeAnimation from "@/assets/animations/coffee.json";
+import confetti from "canvas-confetti";
 
 export default {
   name: "",
+  components: {
+    Vue3Lottie,
+  },
 
   data() {
     return {
       congratsIcon,
+      coffeeAnimation,
     };
   },
 
@@ -49,7 +56,7 @@ export default {
       }
 
       if (this.dialogType === "request-accepted") {
-        return "Tak fordi du deler din genstand med andre. Du er nu et skridt tættere på din kaffe- eller tebelønning!";
+        return "Tak fordi du deler din genstand med andre. Du er nu et skridt tættere på din kaffebelønning!";
       }
 
       if (this.dialogType === "exit") {
@@ -104,6 +111,20 @@ export default {
         this.$emit("go-to-my-items");
       }
     },
+    launchConfetti() {
+      confetti({
+        particleCount: 500,
+        spread: 180,
+        origin: { y: 0.6 },
+      });
+    },
+  },
+  watch: {
+    modelValue(newValue) {
+      if (newValue && this.dialogType === "request-accepted") {
+        this.launchConfetti();
+      }
+    },
   },
 };
 </script>
@@ -119,8 +140,16 @@ export default {
           {{ dialogTitle }}
         </v-card-title>
 
+        <Vue3Lottie
+          v-if="dialogType === 'request-accepted'"
+          :animationData="coffeeAnimation"
+          :height="160"
+          :width="160"
+          class="mx-auto coffee-animation"
+        />
+
         <v-img
-          v-if="!isDelete && !isExit"
+          v-else-if="!isDelete && !isExit"
           :src="congratsIcon"
           contain
           max-width="50"
@@ -212,5 +241,10 @@ export default {
   font-size: 14px;
   color: white;
   line-height: 1.5;
+}
+
+.coffee-animation {
+  margin-top: -20px;
+  margin-bottom: -20px;
 }
 </style>
