@@ -26,5 +26,5 @@ export const userService = {
         }
 
         return await response.json();
-    }
+    },
 };

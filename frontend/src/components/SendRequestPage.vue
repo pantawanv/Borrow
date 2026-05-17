@@ -244,7 +244,7 @@ export default {
     <v-textarea
       v-model="message"
       aria-labelledby="item-message-label"
-      placeholder="Skriv en besked til udlåneren, hvor du fortæller lidt om dig selv og hvorfor du gerne vil låne genstanden."
+      placeholder="Skriv en besked til udlåneren, hvor du evt. beskriver, hvorfor du vil låne genstanden, og angiv gerne et præcist klokkeslæt for afhentning."
       rounded="lg"
       density="compact"
       variant="solo"

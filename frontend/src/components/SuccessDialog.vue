@@ -31,6 +31,7 @@ export default {
       if (this.dialogType === "exit-request") return "Annuller anmodning?";
       if (this.dialogType === "request-sent") return "Anmodning Sendt!";
       if (this.dialogType === "account-created") return "Konto Oprettet!";
+      if (this.dialogType === "request-accepted") return "Anmodning Godkendt!";
       return "Genstand Oprettet!";
     },
 
@@ -45,6 +46,10 @@ export default {
 
       if (this.dialogType === "request-sent") {
         return "Din anmodning er blevet sendt til udlåneren. Du vil modtage en notifikation, når udlåneren har svaret på din anmodning.";
+      }
+
+      if (this.dialogType === "request-accepted") {
+        return "Tak fordi du deler din genstand med andre. Du er nu et skridt tættere på din kaffe- eller tebelønning!";
       }
 
       if (this.dialogType === "exit") {
@@ -82,6 +87,9 @@ export default {
       }
       if (this.dialogType === "account-created") {
         return "Gå til login";
+      }
+      if (this.dialogType === "request-accepted") {
+        return "Ok";
       }
       return "Gå til mine genstande";
     },

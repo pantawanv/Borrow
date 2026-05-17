@@ -20,6 +20,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
+import Profile from "./components/Profile.vue";
 
 export default {
   name: "App",
@@ -38,6 +39,7 @@ export default {
     RequestsPage,
     LoginPage,
     RegisterPage,
+    Profile,
   },
 
   data() {
@@ -140,6 +142,9 @@ export default {
     },
     goToLogin() {
       this.currentPage = "login";
+    },
+    goToProfile() {
+      this.currentPage = "profile";
     },
 
     async saveItem() {
@@ -335,11 +340,17 @@ export default {
           <v-btn @click="goToMyItems"> Mine Genstande </v-btn>
         </div>
 
-        <v-btn icon>
-          <v-icon class="notification-btn" @click="goToRequests">
-            mdi-bell-outline
-          </v-icon>
-        </v-btn>
+        <div class="right-items">
+          <v-btn variant="text" @click="goToRequests">
+            <v-icon class="mr-1">mdi-bell-outline</v-icon>
+            <span>Anmodninger</span>
+          </v-btn>
+
+          <v-btn variant="text" @click="goToProfile">
+            <v-icon class="mr-1">mdi-account-outline</v-icon>
+            <span>Profil</span>
+          </v-btn>
+        </div>
       </div>
     </v-app-bar>
     <v-main>
@@ -439,6 +450,13 @@ export default {
         @go-to-register="goToRegister"
         @go-to-home="goToHome"
       />
+
+      <Profile
+        v-if="currentPage === 'profile'"
+        :currentUser="currentUser"
+        :user="backendUser"
+        @go-to-home="goToHome"
+      />
     </v-main>
   </v-app>
 </template>
@@ -472,11 +490,11 @@ export default {
   align-items: center;
   gap: 12px;
 }
-.notification-btn {
-  font-size: 24px;
-  align-items: end;
+.right-items {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-
 .spacer {
   flex: 1;
 }

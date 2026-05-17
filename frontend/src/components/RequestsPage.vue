@@ -1,5 +1,6 @@
 <script>
-import { loanService } from "../services/loanService";
+import { loanService } from "@/services/loanService";
+import SuccessDialog from "@/components/SuccessDialog.vue";
 export default {
   name: "RequestsPage",
   props: {
@@ -7,13 +8,17 @@ export default {
     itemForm: Object,
     currentUserId: Number,
   },
-  components: {},
+  components: {
+    SuccessDialog,
+  },
   data() {
     return {
       loans: [],
       selectedTab: "received",
       selectedFilter: "Afventende",
       filters: ["Afventende", "Godkendt", "Tidligere"],
+      showDialog: false,
+      dialogType: null,
     };
   },
   async mounted() {
@@ -97,6 +102,23 @@ export default {
         console.error("Error fetching loans:", error);
       }
     },
+    async acceptLoan(loan) {
+      try {
+        await loanService.update(loan.id, {
+          ...loan,
+          status: "Godkendt",
+        });
+
+        loan.status = "Godkendt";
+
+        this.dialogType = "request-accepted";
+        this.showDialog = true;
+
+        await this.fetchLoans();
+      } catch (error) {
+        console.error("Error accepting loan:", error);
+      }
+    },
   },
   watch: {},
 };
@@ -167,9 +189,11 @@ export default {
       </p>
       <div v-if="selectedTab === 'received'">
         <v-btn
+          v-if="loan.status === 'Anmodet'"
           color="green-lighten-1"
           style="color: black; font-weight: normal"
           class="ma-1 btn-actions"
+          @click="acceptLoan(loan)"
         >
           <v-icon size="18" class="mr-1">mdi-check</v-icon>
           Acceptér
@@ -205,6 +229,7 @@ export default {
         </v-btn>
       </div>
     </v-card>
+    <SuccessDialog v-model="showDialog" :dialogType="dialogType" />
   </v-container>
 </template>
 

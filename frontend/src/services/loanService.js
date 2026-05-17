@@ -37,4 +37,26 @@ export const loanService = {
             throw error;
         }
     },
+
+    async update(id, loan) {
+        try {
+            const response = await fetch(`${BASE_URL}/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(loan)
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update loan");
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            console.error("Error updating loan:", error);
+            throw error;
+        }
+    },
 };
