@@ -63,18 +63,23 @@ export default {
       return result;
     },
     filterCounts() {
+      const availableItems = this.items.filter(
+        (item) => item.ownerUserId !== this.currentUserId,
+      );
       return {
-        Alle: this.items.length,
-        Værktøj: this.items.filter((item) => item.categoryId === 1).length,
-        Køkken: this.items.filter((item) => item.categoryId === 2).length,
-        Elektronik: this.items.filter((item) => item.categoryId === 3).length,
-        Udendørs: this.items.filter((item) => item.categoryId === 4).length,
-        Sport: this.items.filter((item) => item.categoryId === 5).length,
-        Transport: this.items.filter((item) => item.categoryId === 6).length,
-        Underholdning: this.items.filter((item) => item.categoryId === 7)
+        Alle: availableItems.length,
+        Værktøj: availableItems.filter((item) => item.categoryId === 1).length,
+        Køkken: availableItems.filter((item) => item.categoryId === 2).length,
+        Elektronik: availableItems.filter((item) => item.categoryId === 3)
           .length,
-        Hobby: this.items.filter((item) => item.categoryId === 8).length,
-        Andet: this.items.filter((item) => item.categoryId === 9).length,
+        Udendørs: availableItems.filter((item) => item.categoryId === 4).length,
+        Sport: availableItems.filter((item) => item.categoryId === 5).length,
+        Transport: availableItems.filter((item) => item.categoryId === 6)
+          .length,
+        Underholdning: availableItems.filter((item) => item.categoryId === 7)
+          .length,
+        Hobby: availableItems.filter((item) => item.categoryId === 8).length,
+        Andet: availableItems.filter((item) => item.categoryId === 9).length,
       };
     },
   },
@@ -132,11 +137,15 @@ export default {
       </div>
     </v-col>
   </v-row>
-  <v-row class="pa-6">
-    <v-col v-for="item in filteredItems" :key="item.id" cols="12" md="6" lg="4">
-      <ItemPreviewCard :item="item" @open="$emit('view-item-details', item)" />
-    </v-col>
-  </v-row>
+
+  <div class="items-grid">
+    <ItemPreviewCard
+      v-for="item in filteredItems"
+      :key="item.id"
+      :item="item"
+      @open="$emit('view-item-details', item)"
+    />
+  </div>
 </template>
 
 <style scoped>
@@ -175,5 +184,12 @@ export default {
 
 .filter-scroll::-webkit-scrollbar {
   display: none;
+}
+
+.items-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 24px;
 }
 </style>

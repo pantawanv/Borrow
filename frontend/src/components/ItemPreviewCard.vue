@@ -37,7 +37,7 @@ export default {
 </script>
 
 <template>
-  <v-card @click="$emit('open')" class="rounded-lg">
+  <v-card @click="$emit('open')" class="rounded-lg item-card">
     <v-img class="item-image" :src="mainImage" contain />
     <div class="info-content">
       <div class="top-text">
@@ -61,6 +61,15 @@ export default {
 </template>
 
 <style scoped>
+.item-card {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .item-card {
+    max-width: 280px;
+  }
+}
 .top-text {
   display: flex;
   justify-content: space-between;
@@ -93,13 +102,13 @@ export default {
 }
 
 .item-image {
-  height: 300px;
+  height: 180px;
   background-color: white;
 }
 
 @media (min-width: 960px) {
   .item-image {
-    height: 600px;
+    height: 250px;
   }
 }
 </style>

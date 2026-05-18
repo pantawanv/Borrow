@@ -17,6 +17,8 @@ exports.create = async (req, res) => {
             lastName: req.body.lastName,
             email: req.body.email,
             address: req.body.address,
+            postalCode: req.body.postalCode,
+            city: req.body.city,
             phoneNumber: req.body.phoneNumber
         });
 

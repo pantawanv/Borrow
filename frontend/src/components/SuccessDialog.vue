@@ -90,7 +90,7 @@ export default {
     },
     buttonText() {
       if (this.dialogType === "request-sent") {
-        return "Gå til 'Find genstande'";
+        return "Gå til 'Mine Anmodninger'";
       }
       if (this.dialogType === "account-created") {
         return "Gå til login";

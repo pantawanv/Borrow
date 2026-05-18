@@ -135,7 +135,7 @@ export default {
     },
   },
   watch: {},
-  emits: ["go-to-discover"],
+  emits: ["go-to-discover", "go-to-requests"],
 };
 </script>
 
@@ -264,7 +264,7 @@ export default {
     <SuccessDialog
       v-model="showExitDialog"
       :dialogType="dialogType"
-      @go-to-my-items="$emit('go-to-discover')"
+      @go-to-my-items="$emit('go-to-requests')"
     />
   </v-container>
 </template>

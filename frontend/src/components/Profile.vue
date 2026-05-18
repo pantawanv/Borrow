@@ -76,7 +76,7 @@ export default {
 
           <p>
             <v-icon size="18" class="mr-1">mdi-map-marker-outline</v-icon>
-            {{ user.address }}
+            {{ user.address }} {{ user.postalCode }} {{ user.city }}
           </p>
 
           <p>

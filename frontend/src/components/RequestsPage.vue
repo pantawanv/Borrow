@@ -16,7 +16,7 @@ export default {
       loans: [],
       selectedTab: "received",
       selectedFilter: "Afventende",
-      filters: ["Afventende", "Godkendt", "Tidligere"],
+      filters: ["Afventende", "Igangværende", "Tidligere"],
       showDialog: false,
       dialogType: null,
     };
@@ -44,7 +44,7 @@ export default {
         return result.filter((loan) => loan.status === "Anmodet");
       }
 
-      if (this.selectedFilter === "Godkendt") {
+      if (this.selectedFilter === "Igangværende") {
         return result.filter((loan) => loan.status === "Godkendt");
       }
 
@@ -65,7 +65,8 @@ export default {
         Afventende: userLoans.filter((loan) => loan.status === "Anmodet")
           .length,
 
-        Godkendt: userLoans.filter((loan) => loan.status === "Godkendt").length,
+        Igangværende: userLoans.filter((loan) => loan.status === "Godkendt")
+          .length,
 
         Tidligere: userLoans.filter(
           (loan) => loan.status === "Returneret" || loan.status === "Afvist",

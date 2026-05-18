@@ -80,6 +80,8 @@ export default {
         password: "",
         confirmPassword: "",
         address: "",
+        postalCode: "",
+        city: "",
         phoneNumber: "",
       },
     };
@@ -307,6 +309,8 @@ export default {
           lastName: this.userForm.lastName,
           email: this.userForm.email,
           address: this.userForm.address,
+          postalCode: this.userForm.postalCode,
+          city: this.userForm.city,
           phoneNumber: this.userForm.phoneNumber,
         });
 
@@ -314,6 +318,8 @@ export default {
           firstName: "",
           lastName: "",
           address: "",
+          postalCode: "",
+          city: "",
           phoneNumber: "",
           email: "",
           password: "",
@@ -421,6 +427,7 @@ export default {
         :itemForm="itemForm"
         :currentUserId="backendUser?.id"
         @go-to-discover="goToDiscover"
+        @go-to-requests="goToRequests"
       />
 
       <RegisterPage

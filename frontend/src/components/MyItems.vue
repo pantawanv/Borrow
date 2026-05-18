@@ -111,11 +111,14 @@ export default {
   <p v-else-if="filteredItems.length === 0" class="info-text">
     Ingen genstande matcher det valgte filter.
   </p>
-  <v-row class="pa-6">
-    <v-col v-for="item in filteredItems" :key="item.id" cols="12" md="6" lg="4">
-      <ItemPreviewCard :item="item" @open="$emit('view-item-details', item)" />
-    </v-col>
-  </v-row>
+  <div class="items-grid">
+    <ItemPreviewCard
+      v-for="item in filteredItems"
+      :key="item.id"
+      :item="item"
+      @open="$emit('view-item-details', item)"
+    />
+  </div>
 </template>
 
 <style scoped>
@@ -159,5 +162,12 @@ export default {
 
 .clickable-card {
   cursor: pointer;
+}
+
+.items-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 24px;
 }
 </style>

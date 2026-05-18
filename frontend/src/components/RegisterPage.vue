@@ -67,18 +67,48 @@ export default {
           ></v-text-field>
         </div>
 
-        <!-- Address -->
+        <!-- Street name -->
         <div class="input-group">
-          <p class="input-label">Adresse</p>
+          <p class="input-label">Gadenavn og nr.</p>
 
           <v-text-field
-            placeholder="Din adresse"
+            placeholder="Dit gadenavn og nr."
             type="text"
             variant="solo"
             class="input"
             hide-details
             v-model="userForm.address"
           ></v-text-field>
+        </div>
+
+        <div class="grouped">
+          <!-- Postal Code -->
+          <div class="input-group">
+            <p class="input-label">Postnummer</p>
+
+            <v-text-field
+              placeholder="Dit postnummer"
+              type="text"
+              variant="solo"
+              class="input"
+              hide-details
+              v-model="userForm.postalCode"
+            ></v-text-field>
+          </div>
+
+          <!-- City -->
+          <div class="input-group">
+            <p class="input-label">By</p>
+
+            <v-text-field
+              placeholder="Din by"
+              type="text"
+              variant="solo"
+              class="input"
+              hide-details
+              v-model="userForm.city"
+            ></v-text-field>
+          </div>
         </div>
 
         <!-- Phone Number -->
@@ -248,5 +278,10 @@ export default {
 
 .text {
   font-size: 14px;
+}
+
+.grouped {
+  display: flex;
+  gap: 16px;
 }
 </style>
