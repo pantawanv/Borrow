@@ -20,7 +20,8 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
-import Profile from "./components/Profile.vue";
+import Profile from "@/components/Profile.vue";
+import AppBar from "@/components/AppBar.vue";
 
 export default {
   name: "App",
@@ -40,6 +41,7 @@ export default {
     LoginPage,
     RegisterPage,
     Profile,
+    AppBar,
   },
 
   data() {
@@ -329,30 +331,13 @@ export default {
 </script>
 <template>
   <v-app>
-    <v-app-bar class="app-bar">
-      <!-- TODO: Flyt knapperne og fjern div -->
-      <div class="top-items">
-        <div class="left-items">
-          <v-toolbar-title @click="currentPage = 'home'">
-            Borrow
-          </v-toolbar-title>
-
-          <v-btn @click="goToMyItems"> Mine Genstande </v-btn>
-        </div>
-
-        <div class="right-items">
-          <v-btn variant="text" @click="goToRequests">
-            <v-icon class="mr-1">mdi-bell-outline</v-icon>
-            <span>Anmodninger</span>
-          </v-btn>
-
-          <v-btn variant="text" @click="goToProfile">
-            <v-icon class="mr-1">mdi-account-outline</v-icon>
-            <span>Profil</span>
-          </v-btn>
-        </div>
-      </div>
-    </v-app-bar>
+    <AppBar
+      v-if="currentPage !== 'login' && currentPage !== 'register'"
+      @go-to-home="goToHome"
+      @go-to-my-items="goToMyItems"
+      @go-to-requests="goToRequests"
+      @go-to-profile="goToProfile"
+    />
     <v-main>
       <Home
         v-if="currentPage === 'home'"
@@ -460,41 +445,4 @@ export default {
   </v-app>
 </template>
 
-<style scoped>
-.app-bar {
-  background-color: rgb(26, 25, 25);
-  color: white;
-  font-weight: bold;
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-.v-toolbar-title {
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.top-items {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding-left: 16px;
-  padding-right: 16px;
-}
-
-.left-items {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.right-items {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.spacer {
-  flex: 1;
-}
-</style>
+<style scoped></style>
