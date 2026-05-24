@@ -8,7 +8,7 @@ import MyItems from "@/components/MyItems.vue";
 import ItemDetailsPage from "@/components/ItemDetailsPage.vue";
 import DiscoverPage from "@/components/DiscoverPage.vue";
 import { itemService } from "@/services/itemService.js";
-import SuccessDialog from "@/components/SuccessDialog.vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { imageService } from "@/services/imageService.js";
 import SendRequestPage from "@/components/SendRequestPage.vue";
 import RequestsPage from "@/components/RequestsPage.vue";
@@ -37,7 +37,7 @@ export default {
     ConfirmPage,
     MyItems,
     ItemDetailsPage,
-    SuccessDialog,
+    ConfirmDialog,
     SendRequestPage,
     RequestsPage,
     LoginPage,
@@ -52,7 +52,7 @@ export default {
       currentStep: 1,
       selectedItem: null,
       editingItemId: null,
-      showSuccessDialog: false,
+      showConfirmDialog: false,
       dialogType: null,
       selectedDeleteId: null,
       showDeleteToast: false,
@@ -233,7 +233,7 @@ export default {
         this.dialogType = this.editingItemId ? "update" : "create";
 
         this.editingItemId = null;
-        this.showSuccessDialog = true;
+        this.showConfirmDialog = true;
       } catch (error) {
         console.error("Error saving item:", error);
       }
@@ -261,7 +261,7 @@ export default {
     deleteItem(id) {
       this.selectedDeleteId = id;
       this.dialogType = "delete";
-      this.showSuccessDialog = true;
+      this.showConfirmDialog = true;
     },
 
     async confirmDelete() {
@@ -354,7 +354,7 @@ export default {
 
         this.dialogType = this.editingItemId ? "exit-edit" : "exit";
 
-        this.showSuccessDialog = true;
+        this.showConfirmDialog = true;
 
         return;
       }
@@ -362,7 +362,7 @@ export default {
       destination();
     },
     confirmNavigation() {
-      this.showSuccessDialog = false;
+      this.showConfirmDialog = false;
 
       // Exit navigation flow
       if (this.pendingNavigation) {
@@ -489,8 +489,8 @@ export default {
         @go-to-send-request="goToSendRequest"
       />
 
-      <SuccessDialog
-        v-model="showSuccessDialog"
+      <ConfirmDialog
+        v-model="showConfirmDialog"
         :dialogType="dialogType"
         @go-to-my-items="confirmNavigation"
         @confirm-delete="confirmDelete"

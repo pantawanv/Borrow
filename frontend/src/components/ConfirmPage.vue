@@ -1,13 +1,13 @@
 <script>
 import Stepper from "@/components/Stepper.vue";
 import placeholder from "@/assets/images/placeholder.jpg";
-import SuccessDialog from "@/components/SuccessDialog.vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 
 export default {
   name: "ConfirmPage",
   components: {
     Stepper,
-    SuccessDialog,
+    ConfirmDialog,
   },
   data() {
     return {
@@ -236,7 +236,7 @@ export default {
     </v-card>
   </v-dialog>
 
-  <SuccessDialog
+  <ConfirmDialog
     v-model="showDialog"
     :dialog-type="dialogType"
     @go-to-my-items="$emit('go-to-my-items')"

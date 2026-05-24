@@ -5,7 +5,7 @@ import coffeeAnimation from "@/assets/animations/coffee.json";
 import confetti from "canvas-confetti";
 
 export default {
-  name: "SuccessDialog",
+  name: "ConfirmDialog",
   components: {
     Vue3Lottie,
   },
@@ -134,7 +134,7 @@ export default {
     :model-value="modelValue"
     @update:modelValue="$emit('update:modelValue', $event)"
   >
-    <v-card class="success-modal pa-6">
+    <v-card class="confirm-modal pa-6">
       <div class="text-center">
         <v-card-title class="text-h5">
           {{ dialogTitle }}
@@ -226,7 +226,7 @@ export default {
 </template>
 
 <style scoped>
-.success-modal {
+.confirm-modal {
   max-width: 380px;
   width: 100%;
   margin: auto;

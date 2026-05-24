@@ -1,6 +1,6 @@
 <script>
 import { loanService } from "@/services/loanService";
-import SuccessDialog from "@/components/SuccessDialog.vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 export default {
   name: "RequestsPage",
   props: {
@@ -9,7 +9,7 @@ export default {
     currentUserId: Number,
   },
   components: {
-    SuccessDialog,
+    ConfirmDialog,
   },
   data() {
     return {
@@ -230,7 +230,7 @@ export default {
         </v-btn>
       </div>
     </v-card>
-    <SuccessDialog v-model="showDialog" :dialogType="dialogType" />
+    <ConfirmDialog v-model="showDialog" :dialogType="dialogType" />
   </v-container>
 </template>
 

@@ -1,10 +1,10 @@
 <script>
 import { authService } from "@/services/authService";
-import SuccessDialog from "@/components/SuccessDialog.vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 export default {
   name: "RegisterPage",
   components: {
-    SuccessDialog,
+    ConfirmDialog,
   },
   data() {
     return {
@@ -310,7 +310,7 @@ export default {
           >
         </div>
       </v-card>
-      <SuccessDialog
+      <ConfirmDialog
         v-model="showDialog"
         :dialogType="dialogType"
         @go-to-login="$emit('go-to-login')"

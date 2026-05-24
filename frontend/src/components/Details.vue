@@ -1,11 +1,11 @@
 <script>
 import Stepper from "@/components/Stepper.vue";
-import SuccessDialog from "@/components/SuccessDialog.vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 export default {
   name: "Details",
   components: {
     Stepper,
-    SuccessDialog,
+    ConfirmDialog,
   },
   data() {
     return {
@@ -211,7 +211,7 @@ export default {
       </v-row>
     </div>
   </v-container>
-  <SuccessDialog
+  <ConfirmDialog
     v-model="showExitDialog"
     :dialog-type="dialogType"
     @go-to-my-items="$emit('go-to-my-items')"

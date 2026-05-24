@@ -1,5 +1,5 @@
 <script>
-import SuccessDialog from "./SuccessDialog.vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { itemService } from "@/services/itemService.js";
 import { loanService } from "../services/loanService";
 export default {
@@ -10,7 +10,7 @@ export default {
     currentUserId: Number,
   },
   components: {
-    SuccessDialog,
+    ConfirmDialog,
   },
   data() {
     return {
@@ -261,7 +261,7 @@ export default {
       Send anmodning
     </v-btn>
 
-    <SuccessDialog
+    <ConfirmDialog
       v-model="showExitDialog"
       :dialogType="dialogType"
       @go-to-my-items="$emit('go-to-requests')"
