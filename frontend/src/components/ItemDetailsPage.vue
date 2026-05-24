@@ -79,7 +79,6 @@ export default {
         ? this.item.images[0].imageUrl
         : this.imagePlaceholder;
     },
-    // Placeholder for current user check - replace with actual auth logic
     isOwner() {
       const currentUserId = this.currentUserId;
 

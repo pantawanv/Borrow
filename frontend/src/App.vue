@@ -53,6 +53,7 @@ export default {
       showSuccessDialog: false,
       dialogType: null,
       selectedDeleteId: null,
+      showDeleteToast: false,
       currentUser: null,
       backendUser: null,
 
@@ -269,6 +270,7 @@ export default {
         this.selectedDeleteId = null;
 
         this.goToMyItems();
+        this.showDeleteToast = true;
       } catch (error) {
         console.error("Error deleting item:", error);
       }
@@ -459,6 +461,15 @@ export default {
         @confirm-delete="confirmDelete"
         @go-to-login="goToLogin"
       />
+
+      <v-snackbar
+        v-model="showDeleteToast"
+        timeout="3000"
+        color="green-darken-1"
+        location="top"
+      >
+        Genstanden blev slettet!
+      </v-snackbar>
 
       <SendRequestPage
         v-if="currentPage === 'sendRequest'"
