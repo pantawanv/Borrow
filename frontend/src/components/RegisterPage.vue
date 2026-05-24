@@ -16,6 +16,10 @@ export default {
   methods: {
     async register() {
       await this.$emit("save-user");
+
+      // Remove focus from input fields
+      document.activeElement.blur();
+
       this.dialogType = "account-created";
       this.showDialog = true;
     },
@@ -136,6 +140,7 @@ export default {
             class="input"
             hide-details
             v-model="userForm.email"
+            autocomplete="off"
           ></v-text-field>
         </div>
 
@@ -150,6 +155,7 @@ export default {
             class="input"
             hide-details
             v-model="userForm.password"
+            autocomplete="new-password"
           ></v-text-field>
         </div>
 

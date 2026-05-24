@@ -14,6 +14,13 @@ export default {
     async login() {
       try {
         const user = await authService.login(this.email, this.password);
+
+        this.email = "";
+        this.password = "";
+
+        // Remove focus from fields
+        document.activeElement.blur();
+
         this.$emit("go-to-home");
 
         console.log("User logged in:", user);
@@ -44,6 +51,7 @@ export default {
             class="input"
             hide-details
             v-model="email"
+            autocomplete="off"
           ></v-text-field>
         </div>
 
@@ -57,6 +65,7 @@ export default {
             class="input"
             hide-details
             v-model="password"
+            autocomplete="new-password"
           ></v-text-field>
         </div>
         <div class="login-btn">

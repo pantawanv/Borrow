@@ -91,7 +91,11 @@ export default {
       this.currentUser = user;
 
       if (user) {
-        this.backendUser = await userService.getByFirebaseUid(user.uid);
+        try {
+          this.backendUser = await userService.getByFirebaseUid(user.uid);
+        } catch (error) {
+          console.warn("Backend user not ready yet");
+        }
       }
     });
   },
