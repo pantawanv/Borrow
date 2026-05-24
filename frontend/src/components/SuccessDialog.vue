@@ -5,7 +5,7 @@ import coffeeAnimation from "@/assets/animations/coffee.json";
 import confetti from "canvas-confetti";
 
 export default {
-  name: "",
+  name: "SuccessDialog",
   components: {
     Vue3Lottie,
   },

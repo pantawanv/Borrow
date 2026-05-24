@@ -2,7 +2,7 @@
 import Stepper from "@/components/Stepper.vue";
 import SuccessDialog from "./SuccessDialog.vue";
 export default {
-  name: "",
+  name: "BasicInfo",
   components: {
     Stepper,
     SuccessDialog,

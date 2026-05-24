@@ -3,6 +3,7 @@ import ItemPreviewCard from "@/components/ItemPreviewCard.vue";
 import { itemService } from "@/services/itemService.js";
 
 export default {
+  name: "MyItems",
   props: {
     currentUserId: Number,
   },

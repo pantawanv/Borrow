@@ -2,7 +2,7 @@
 import { authService } from "@/services/authService";
 import SuccessDialog from "@/components/SuccessDialog.vue";
 export default {
-  name: "",
+  name: "RegisterPage",
   components: {
     SuccessDialog,
   },

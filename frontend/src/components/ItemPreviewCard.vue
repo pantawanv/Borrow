@@ -2,6 +2,7 @@
 import placeholder from "@/assets/images/placeholder.jpg";
 
 export default {
+  name: "ItemPreviewCard",
   props: {
     item: Object,
   },

@@ -7,7 +7,7 @@ import OwnerActions from "@/components/OwnerActions.vue";
 import BorrowerActions from "@/components/BorrowerActions.vue";
 
 export default {
-  name: "",
+  name: "ItemDetailsPage",
   components: {
     OwnerActions,
     BorrowerActions,

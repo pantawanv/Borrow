@@ -2,7 +2,7 @@
 import ItemPreviewCard from "./ItemPreviewCard.vue";
 import { itemService } from "@/services/itemService.js";
 export default {
-  name: "",
+  name: "DiscoverPage",
   props: {
     currentUserId: Number,
   },

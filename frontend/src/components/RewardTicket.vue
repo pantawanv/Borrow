@@ -1,7 +1,7 @@
 <script>
 import coffeeIcon from "@/assets/images/coffee.png";
 export default {
-  name: "",
+  name: "RewardTicket",
   components: {},
   data() {
     return {

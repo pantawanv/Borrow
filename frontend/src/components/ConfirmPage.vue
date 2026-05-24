@@ -4,7 +4,7 @@ import placeholder from "@/assets/images/placeholder.jpg";
 import SuccessDialog from "@/components/SuccessDialog.vue";
 
 export default {
-  name: "",
+  name: "ConfirmPage",
   components: {
     Stepper,
     SuccessDialog,

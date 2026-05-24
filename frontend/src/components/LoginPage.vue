@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "",
+  name: "LoginPage",
   components: {},
   data() {
     return {

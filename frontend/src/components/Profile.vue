@@ -4,7 +4,7 @@ import { userService } from "../services/userService";
 import CoffeeReward from "@/components/CoffeeReward.vue";
 import RewardTicket from "@/components/RewardTicket.vue";
 export default {
-  name: "",
+  name: "Profile",
   props: {
     user: Object,
   },
