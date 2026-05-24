@@ -32,6 +32,8 @@ export default {
 
         console.log("User logged in:", user);
       } catch (error) {
+        this.errors.password = "Forkert email eller adgangskode.";
+
         console.error("Login error:", error);
       }
     },
