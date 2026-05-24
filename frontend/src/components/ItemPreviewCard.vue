@@ -32,6 +32,18 @@ export default {
         ? this.item.images[0].imageUrl
         : this.imagePlaceholder;
     },
+    statusColor() {
+      switch (this.item.status?.toLowerCase()) {
+        case "tilgængelig":
+          return "green";
+        case "udlånt":
+          return "yellow-darken-2";
+        case "inaktiv":
+          return "red";
+        default:
+          return "grey";
+      }
+    },
   },
 };
 </script>
@@ -45,7 +57,7 @@ export default {
           {{ item.name }}
         </v-card-title>
 
-        <v-chip size="small"> {{ item.status }} </v-chip>
+        <v-chip size="small" :color="statusColor"> {{ item.status }} </v-chip>
       </div>
 
       <p class="brand-text">

@@ -59,7 +59,6 @@ export default {
             item.brand?.toLowerCase().includes(query),
         );
       }
-
       return result;
     },
     filterCounts() {
@@ -138,7 +137,16 @@ export default {
     </v-col>
   </v-row>
 
-  <div class="items-grid">
+  <div v-if="filteredItems.length === 0" class="empty-state">
+    <v-icon size="48" class="mb-2">mdi-magnify-remove-outline</v-icon>
+    <p>
+      Ingen genstande matcher dine søgekriterier.
+      <br />
+      Prøv at ændre din søgning eller vælg en anden kategori.
+    </p>
+  </div>
+
+  <div v-else class="items-grid">
     <ItemPreviewCard
       v-for="item in filteredItems"
       :key="item.id"
@@ -191,5 +199,15 @@ export default {
   flex-wrap: wrap;
   gap: 24px;
   padding: 24px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  color: #9e9e9e;
+  text-align: center;
 }
 </style>

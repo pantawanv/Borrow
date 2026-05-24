@@ -85,8 +85,19 @@ export default {
 
       return this.item.ownerUserId === currentUserId;
     },
+    statusColor() {
+      switch (this.item.status?.toLowerCase()) {
+        case "tilgængelig":
+          return "green";
+        case "udlånt":
+          return "yellow-darken-2";
+        case "inaktiv":
+          return "red";
+        default:
+          return "grey";
+      }
+    },
   },
-  watch: {},
   emits: ["go-to-my-items", "edit-item", "delete-item", "go-to-send-request"],
   props: {
     item: Object,
@@ -129,7 +140,9 @@ export default {
           {{ item.name }}
         </v-card-title>
 
-        <v-chip size="small" class="status-chip">{{ item.status }}</v-chip>
+        <v-chip size="small" class="status-chip" :color="statusColor">
+          {{ item.status }}
+        </v-chip>
       </div>
       <v-card-subtitle class="item-subtitle pa-0">{{
         item.brand
