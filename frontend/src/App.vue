@@ -84,6 +84,9 @@ export default {
         city: "",
         phoneNumber: "",
       },
+
+      pendingNavigation: null,
+      showNavigationDialog: false,
     };
   },
   mounted() {
@@ -336,6 +339,32 @@ export default {
         console.error("Error details:", error.response?.data || error.message);
       }
     },
+    handleNavigation(destination) {
+      const isEditingFlow =
+        this.currentPage === "basicInfo" ||
+        this.currentPage === "details" ||
+        this.currentPage === "confirm";
+
+      if (isEditingFlow) {
+        this.pendingNavigation = destination;
+
+        this.dialogType = this.editingItemId ? "exit-edit" : "exit";
+
+        this.showSuccessDialog = true;
+
+        return;
+      }
+
+      destination();
+    },
+    confirmNavigation() {
+      this.showSuccessDialog = false;
+
+      if (this.pendingNavigation) {
+        this.pendingNavigation();
+        this.pendingNavigation = null;
+      }
+    },
   },
 };
 </script>
@@ -343,11 +372,11 @@ export default {
   <v-app>
     <AppBar
       v-if="currentPage !== 'login' && currentPage !== 'register'"
-      @go-to-home="goToHome"
-      @go-to-my-items="goToMyItems"
-      @go-to-requests="goToRequests"
-      @go-to-profile="goToProfile"
-      @go-to-discover="goToDiscover"
+      @go-to-home="handleNavigation(goToHome)"
+      @go-to-my-items="handleNavigation(goToMyItems)"
+      @go-to-requests="handleNavigation(goToRequests)"
+      @go-to-profile="handleNavigation(goToProfile)"
+      @go-to-discover="handleNavigation(goToDiscover)"
     />
     <v-main>
       <Home
@@ -421,7 +450,7 @@ export default {
       <SuccessDialog
         v-model="showSuccessDialog"
         :dialogType="dialogType"
-        @go-to-my-items="goToMyItems"
+        @go-to-my-items="confirmNavigation"
         @confirm-delete="confirmDelete"
         @go-to-login="goToLogin"
       />
