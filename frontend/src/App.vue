@@ -360,9 +360,14 @@ export default {
     confirmNavigation() {
       this.showSuccessDialog = false;
 
+      // Exit navigation flow
       if (this.pendingNavigation) {
         this.pendingNavigation();
         this.pendingNavigation = null;
+      }
+      // create/update flow
+      else {
+        this.goToMyItems();
       }
     },
   },

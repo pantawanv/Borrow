@@ -358,7 +358,7 @@ export default {
             block
             color="grey-darken-4"
             style="font-weight: normal"
-            @click="$emit('go-to-my-items')"
+            @click="openExitDialog"
           >
             Annuller
           </v-btn>
