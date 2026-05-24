@@ -10,11 +10,26 @@ export default {
     return {
       showDialog: false,
       dialogType: null,
+
+      errors: {
+        firstName: "",
+        lastName: "",
+        address: "",
+        postalCode: "",
+        city: "",
+        phoneNumber: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      },
     };
   },
   computed: {},
   methods: {
     async register() {
+      if (!this.validate()) {
+        return;
+      }
       await this.$emit("save-user");
 
       // Remove focus from input fields
@@ -22,6 +37,86 @@ export default {
 
       this.dialogType = "account-created";
       this.showDialog = true;
+    },
+    validate() {
+      let valid = true;
+
+      // First Name validation
+      if (!this.userForm.firstName?.trim()) {
+        this.errors.firstName = "Fornavn er påkrævet.";
+        valid = false;
+      } else {
+        this.errors.firstName = "";
+      }
+
+      // Last Name validation
+      if (!this.userForm.lastName?.trim()) {
+        this.errors.lastName = "Efternavn er påkrævet.";
+        valid = false;
+      } else {
+        this.errors.lastName = "";
+      }
+
+      // Address validation
+      if (!this.userForm.address?.trim()) {
+        this.errors.address = "Adresse er påkrævet.";
+        valid = false;
+      } else {
+        this.errors.address = "";
+      }
+
+      // Postal Code validation
+      if (!this.userForm.postalCode?.trim()) {
+        this.errors.postalCode = "Postnummer er påkrævet.";
+        valid = false;
+      } else {
+        this.errors.postalCode = "";
+      }
+
+      // City validation
+      if (!this.userForm.city?.trim()) {
+        this.errors.city = "By er påkrævet.";
+        valid = false;
+      } else {
+        this.errors.city = "";
+      }
+
+      // Phone Number validation
+      if (!this.userForm.phoneNumber?.trim()) {
+        this.errors.phoneNumber = "Telefonnr. er påkrævet.";
+        valid = false;
+      } else {
+        this.errors.phoneNumber = "";
+      }
+
+      // Email validation
+      if (!this.userForm.email?.trim()) {
+        this.errors.email = "Email er påkrævet.";
+        valid = false;
+      } else {
+        this.errors.email = "";
+      }
+
+      // Password validation
+      if (!this.userForm.password?.trim()) {
+        this.errors.password = "Adgangskode er påkrævet.";
+        valid = false;
+      } else {
+        this.errors.password = "";
+      }
+
+      // Confirm Password validation
+      if (!this.userForm.confirmPassword?.trim()) {
+        this.errors.confirmPassword = "Bekræft venligst adgangskoden.";
+        valid = false;
+      } else if (this.userForm.password !== this.userForm.confirmPassword) {
+        this.errors.confirmPassword = "Adgangskoderne matcher ikke.";
+        valid = false;
+      } else {
+        this.errors.confirmPassword = "";
+      }
+
+      return valid;
     },
   },
   watch: {},
@@ -46,6 +141,9 @@ export default {
         <!-- First Name -->
         <div class="input-group">
           <p class="input-label">Fornavn</p>
+          <div v-if="errors.firstName" class="error-text">
+            {{ errors.firstName }}
+          </div>
 
           <v-text-field
             placeholder="Dit fornavn"
@@ -60,6 +158,9 @@ export default {
         <!-- Last Name -->
         <div class="input-group">
           <p class="input-label">Efternavn</p>
+          <div v-if="errors.lastName" class="error-text">
+            {{ errors.lastName }}
+          </div>
 
           <v-text-field
             placeholder="Dit efternavn"
@@ -74,6 +175,9 @@ export default {
         <!-- Street name -->
         <div class="input-group">
           <p class="input-label">Gadenavn og nr.</p>
+          <div v-if="errors.address" class="error-text">
+            {{ errors.address }}
+          </div>
 
           <v-text-field
             placeholder="Dit gadenavn og nr."
@@ -89,6 +193,9 @@ export default {
           <!-- Postal Code -->
           <div class="input-group">
             <p class="input-label">Postnummer</p>
+            <div v-if="errors.postalCode" class="error-text">
+              {{ errors.postalCode }}
+            </div>
 
             <v-text-field
               placeholder="Dit postnummer"
@@ -103,6 +210,9 @@ export default {
           <!-- City -->
           <div class="input-group">
             <p class="input-label">By</p>
+            <div v-if="errors.city" class="error-text">
+              {{ errors.city }}
+            </div>
 
             <v-text-field
               placeholder="Din by"
@@ -118,6 +228,9 @@ export default {
         <!-- Phone Number -->
         <div class="input-group">
           <p class="input-label">Telefonnr.</p>
+          <div v-if="errors.phoneNumber" class="error-text">
+            {{ errors.phoneNumber }}
+          </div>
 
           <v-text-field
             placeholder="Dit telefonnummer"
@@ -132,6 +245,9 @@ export default {
         <!-- Email -->
         <div class="input-group">
           <p class="input-label">Email</p>
+          <div v-if="errors.email" class="error-text">
+            {{ errors.email }}
+          </div>
 
           <v-text-field
             placeholder="Din email"
@@ -147,6 +263,9 @@ export default {
         <!-- Password -->
         <div class="input-group">
           <p class="input-label">Adgangskode</p>
+          <div v-if="errors.password" class="error-text">
+            {{ errors.password }}
+          </div>
 
           <v-text-field
             placeholder="Indtast en adgangskode"
@@ -162,6 +281,9 @@ export default {
         <!-- Confirm Password -->
         <div class="input-group">
           <p class="input-label">Bekræft adgangskode</p>
+          <div v-if="errors.confirmPassword" class="error-text">
+            {{ errors.confirmPassword }}
+          </div>
 
           <v-text-field
             placeholder="Bekræft din adgangskode"
@@ -289,5 +411,13 @@ export default {
 .grouped {
   display: flex;
   gap: 16px;
+}
+
+.error-text {
+  color: rgb(202, 20, 20);
+  font-size: 14px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+  padding-left: 4px;
 }
 </style>
