@@ -48,6 +48,7 @@ export default {
       this.showRewardTicket = false;
     },
   },
+  emits: ["log-out"],
 };
 </script>
 
@@ -55,7 +56,7 @@ export default {
   <v-container class="page-container pa-6">
     <div class="top-items">
       <h1>Profil</h1>
-      <v-btn variant="text" @click="logOut">
+      <v-btn variant="text" @click="$emit('log-out')">
         <v-icon class="mr-1">mdi-logout</v-icon>
         <span>Log ud</span>
       </v-btn>

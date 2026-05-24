@@ -19,6 +19,7 @@ import { userService } from "@/services/userService.js";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 import Profile from "@/components/Profile.vue";
 import AppBar from "@/components/AppBar.vue";
@@ -372,6 +373,20 @@ export default {
         this.goToMyItems();
       }
     },
+    async logOut() {
+      try {
+        await signOut(auth);
+
+        this.currentUser = null;
+        this.backendUser = null;
+
+        this.currentPage = "login";
+
+        console.log("User logged out");
+      } catch (error) {
+        console.error("Error logging out:", error);
+      }
+    },
   },
 };
 </script>
@@ -497,6 +512,7 @@ export default {
         v-if="currentPage === 'profile'"
         :currentUser="currentUser"
         :user="backendUser"
+        @log-out="logOut"
       />
     </v-main>
   </v-app>
