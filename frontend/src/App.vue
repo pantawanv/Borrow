@@ -23,6 +23,7 @@ import {
 } from "firebase/auth";
 import Profile from "@/components/Profile.vue";
 import AppBar from "@/components/AppBar.vue";
+import { authService } from "@/services/authService";
 
 export default {
   name: "App",
@@ -373,6 +374,25 @@ export default {
         this.goToMyItems();
       }
     },
+    async login(credentials) {
+      try {
+        await authService.login(credentials.email, credentials.password);
+
+        // Wait for backend user fetch
+        const firebaseUser = auth.currentUser;
+
+        if (firebaseUser) {
+          this.backendUser = await userService.getByFirebaseUid(
+            firebaseUser.uid,
+          );
+        }
+
+        this.currentPage = "home";
+        console.log("User logged in");
+      } catch (error) {
+        console.error("Error logging in:", error);
+      }
+    },
     async logOut() {
       try {
         await signOut(auth);
@@ -505,7 +525,7 @@ export default {
       <LoginPage
         v-if="currentPage === 'login'"
         @go-to-register="goToRegister"
-        @go-to-home="goToHome"
+        @login="login"
       />
 
       <Profile

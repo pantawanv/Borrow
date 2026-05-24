@@ -1,5 +1,4 @@
 <script>
-import { authService } from "@/services/authService";
 export default {
   name: "",
   components: {},
@@ -15,27 +14,15 @@ export default {
   },
   computed: {},
   methods: {
-    async login() {
+    submitLogin() {
       if (!this.validate()) {
         return;
       }
-      try {
-        const user = await authService.login(this.email, this.password);
 
-        this.email = "";
-        this.password = "";
-
-        // Remove focus from fields
-        document.activeElement.blur();
-
-        this.$emit("go-to-home");
-
-        console.log("User logged in:", user);
-      } catch (error) {
-        this.errors.password = "Forkert email eller adgangskode.";
-
-        console.error("Login error:", error);
-      }
+      this.$emit("login", {
+        email: this.email,
+        password: this.password,
+      });
     },
     validate() {
       let valid = true;
@@ -60,7 +47,7 @@ export default {
       return valid;
     },
   },
-  emits: ["go-to-home", "go-to-register"],
+  emits: ["login", "go-to-register"],
 };
 </script>
 
@@ -110,7 +97,7 @@ export default {
             color="green-lighten-1"
             class="btn"
             style="color: black; font-weight: normal"
-            @click="login"
+            @click="submitLogin"
             >Log ind</v-btn
           >
         </div>
