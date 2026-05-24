@@ -93,6 +93,9 @@ export default {
       if (!this.userForm.email?.trim()) {
         this.errors.email = "Email er påkrævet.";
         valid = false;
+      } else if (!/\S+@\S+\.\S+/.test(this.userForm.email)) {
+        this.errors.email = "Indtast en gyldig email.";
+        valid = false;
       } else {
         this.errors.email = "";
       }
@@ -100,6 +103,9 @@ export default {
       // Password validation
       if (!this.userForm.password?.trim()) {
         this.errors.password = "Adgangskode er påkrævet.";
+        valid = false;
+      } else if (this.userForm.password.length < 6) {
+        this.errors.password = "Adgangskoden skal være mindst 6 tegn.";
         valid = false;
       } else {
         this.errors.password = "";

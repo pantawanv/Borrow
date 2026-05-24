@@ -7,11 +7,18 @@ export default {
     return {
       email: "",
       password: "",
+      errors: {
+        email: "",
+        password: "",
+      },
     };
   },
   computed: {},
   methods: {
     async login() {
+      if (!this.validate()) {
+        return;
+      }
       try {
         const user = await authService.login(this.email, this.password);
 
@@ -28,6 +35,28 @@ export default {
         console.error("Login error:", error);
       }
     },
+    validate() {
+      let valid = true;
+
+      if (!this.email.trim()) {
+        this.errors.email = "Indtast venligst din email.";
+        valid = false;
+      } else if (!/\S+@\S+\.\S+/.test(this.email)) {
+        this.errors.email = "Indtast venligst en gyldig email.";
+        valid = false;
+      } else {
+        this.errors.email = "";
+      }
+
+      if (!this.password.trim()) {
+        this.errors.password = "Indtast venligst din adgangskode.";
+        valid = false;
+      } else {
+        this.errors.password = "";
+      }
+
+      return valid;
+    },
   },
   emits: ["go-to-home", "go-to-register"],
 };
@@ -43,6 +72,9 @@ export default {
       <v-card class="pa-6 login-card" width="100%" max-width="400">
         <div class="input-group">
           <p class="input-label">Email</p>
+          <div v-if="errors.email" class="error-text">
+            {{ errors.email }}
+          </div>
 
           <v-text-field
             placeholder="dig@eksempel.dk"
@@ -57,9 +89,12 @@ export default {
 
         <div class="input-group">
           <p class="input-label">Adgangskode</p>
+          <div v-if="errors.password" class="error-text">
+            {{ errors.password }}
+          </div>
 
           <v-text-field
-            placeholder="•••••••"
+            placeholder="Indtast din adgangskode"
             type="password"
             variant="solo"
             class="input"
@@ -194,5 +229,12 @@ export default {
   text-transform: none;
   padding: 0;
   min-width: 0;
+}
+.error-text {
+  color: rgb(202, 20, 20);
+  font-size: 14px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+  padding-left: 4px;
 }
 </style>
