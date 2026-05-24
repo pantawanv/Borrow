@@ -347,6 +347,7 @@ export default {
       @go-to-my-items="goToMyItems"
       @go-to-requests="goToRequests"
       @go-to-profile="goToProfile"
+      @go-to-discover="goToDiscover"
     />
     <v-main>
       <Home
