@@ -38,9 +38,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true
         },
         status: {
-        type: DataTypes.ENUM('Anmodet', 'Godkendt', 'Afvist', 'Returneret', 'Annulleret'),
+        type: DataTypes.ENUM('Anmodet', 'Godkendt', 'Afvist', 'Annulleret'),
         allowNull: false,
         defaultValue: 'Anmodet'
+        },
+        pickupStatus: {
+            type: DataTypes.ENUM('Afventer afhentning', 'Ude til udlån', 'Returneret'),
+            allowNull: true
         }
     }, {
         timestamps: false,

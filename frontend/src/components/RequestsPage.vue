@@ -55,7 +55,7 @@ export default {
       if (this.selectedFilter === "Tidligere") {
         return result.filter(
           (loan) =>
-            loan.status === "Returneret" ||
+            loan.pickupStatus === "Returneret" ||
             loan.status === "Afvist" ||
             loan.status === "Annulleret",
         );
@@ -77,7 +77,7 @@ export default {
 
         Tidligere: userLoans.filter(
           (loan) =>
-            loan.status === "Returneret" ||
+            loan.pickupStatus === "Returneret" ||
             loan.status === "Afvist" ||
             loan.status === "Annulleret",
         ).length,
@@ -118,9 +118,11 @@ export default {
         await loanService.update(loan.id, {
           ...loan,
           status: "Godkendt",
+          pickupStatus: "Afventer afhentning",
         });
 
         loan.status = "Godkendt";
+        loan.pickupStatus = "Afventer afhentning";
 
         this.dialogType = "request-accepted";
         this.showDialog = true;
@@ -177,6 +179,22 @@ export default {
     async handleSuggestion(suggestionText) {
       console.log("Received suggestion:", suggestionText);
     },
+    async confirmPickup(loan) {
+      try {
+        await loanService.update(loan.id, {
+          ...loan,
+          pickupStatus: "Ude til udlån",
+        });
+
+        loan.pickupStatus = "Ude til udlån";
+        this.dialogType = "pickup-confirmed";
+        this.showDialog = true;
+
+        await this.fetchLoans();
+      } catch (error) {
+        console.error("Error confirming pickup:", error);
+      }
+    },
   },
   watch: {},
 };
@@ -221,7 +239,16 @@ export default {
           <strong>{{ loan.item?.name }}</strong>
         </h4>
         <!-- TODO: Replace with actual status and style accordingly -->
-        <v-chip size="small" class="status-chip">{{ loan.status }}</v-chip>
+        <div class="chip-group">
+          <v-chip size="small" class="status-chip">{{ loan.status }}</v-chip>
+          <v-chip
+            v-if="loan.pickupStatus"
+            size="small"
+            color="yellow-darken-2"
+            class="status-chip"
+            >{{ loan.pickupStatus }}</v-chip
+          >
+        </div>
       </div>
       <div class="rating">
         <!-- TODO: Replace with actual rating -->
@@ -282,12 +309,31 @@ export default {
 
       <div v-else>
         <v-btn
+          v-if="
+            loan.pickupStatus !== 'Ude til udlån' &&
+            loan.pickupStatus !== 'Returneret'
+          "
           color="red-darken-1"
           style="font-weight: normal"
           class="ma-1 btn-actions"
         >
           <v-icon size="18" class="mr-1">mdi-close</v-icon>
           Annullér anmodning
+        </v-btn>
+        <v-btn
+          v-if="
+            loan.status === 'Godkendt' &&
+            loan.pickupStatus === 'Afventer afhentning'
+          "
+          color="green-lighten-1"
+          style="color: black; font-weight: normal"
+          class="ma-1 btn-actions"
+          @click="confirmPickup(loan)"
+        >
+          <v-icon size="18" class="mr-1"
+            >mdi-package-variant-closed-check</v-icon
+          >
+          Bekræft afhentning
         </v-btn>
       </div>
     </v-card>
@@ -348,6 +394,12 @@ export default {
 
 .normal-text {
   font-weight: normal;
+}
+
+.chip-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 .status-chip {
   flex-shrink: 0;

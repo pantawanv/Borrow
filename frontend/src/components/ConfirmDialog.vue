@@ -42,6 +42,8 @@ export default {
       if (this.dialogType === "request-accepted") return "Anmodning Godkendt!";
       if (this.dialogType === "decline-request") return "Anmodning Afvist!";
       if (this.dialogType === "cancel-loan") return "Annuller Udlån?";
+      if (this.dialogType === "pickup-confirmed")
+        return "Afhentning Bekræftet!";
       return "Genstand Oprettet!";
     },
 
@@ -86,6 +88,10 @@ export default {
         return "Er du sikker på, at du vil annullere dette udlån? Låneren vil få besked om, at udlånet er annulleret.";
       }
 
+      if (this.dialogType === "pickup-confirmed") {
+        return "Tak for at bidrage til mindre overforbrug ved at låne lokalt frem for at købe nyt.";
+      }
+
       return "Tak fordi du deler din genstand med andre. Den er nu synlig for andre brugere, og du kan administrere den under 'Mine genstande'.";
     },
 
@@ -111,6 +117,9 @@ export default {
         this.dialogType === "decline-request"
       ) {
         return "Ok";
+      }
+      if (this.dialogType === "pickup-confirmed") {
+        return "Luk";
       }
       return "Gå til mine genstande";
     },

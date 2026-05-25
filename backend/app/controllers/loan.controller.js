@@ -26,7 +26,8 @@ exports.create = async (req, res) => {
             requestDate: new Date(),
             approvedReturnDate: req.body.approvedReturnDate || null,
             actualReturnDate: req.body.actualReturnDate || null,
-            status: req.body.status || 'Anmodet'
+            status: req.body.status || 'Anmodet',
+            pickupStatus: req.body.pickupStatus || null
 
         });
         res.status(201).send(loan);
