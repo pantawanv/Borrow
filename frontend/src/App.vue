@@ -428,8 +428,6 @@ export default {
         @go-to-requests="goToRequests"
       />
 
-      <!-- Page navigation -->
-
       <DiscoverPage
         v-if="currentPage === 'discover'"
         :currentUserId="backendUser?.id"

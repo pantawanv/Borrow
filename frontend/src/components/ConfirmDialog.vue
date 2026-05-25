@@ -27,6 +27,7 @@ export default {
     "go-to-my-items",
     "confirm-delete",
     "go-to-login",
+    "confirm-cancel-loan",
   ],
 
   computed: {
@@ -39,6 +40,8 @@ export default {
       if (this.dialogType === "request-sent") return "Anmodning Sendt!";
       if (this.dialogType === "account-created") return "Konto Oprettet!";
       if (this.dialogType === "request-accepted") return "Anmodning Godkendt!";
+      if (this.dialogType === "decline-request") return "Anmodning Afvist!";
+      if (this.dialogType === "cancel-loan") return "Annuller Udlån?";
       return "Genstand Oprettet!";
     },
 
@@ -75,6 +78,14 @@ export default {
         return "Din konto er blevet oprettet. Du kan nu logge ind og begynde at dele dine genstande med andre.";
       }
 
+      if (this.dialogType === "decline-request") {
+        return "Du har afvist denne anmodning. Du kan se anmodningen under tidligere anmodninger.";
+      }
+
+      if (this.dialogType === "cancel-loan") {
+        return "Er du sikker på, at du vil annullere dette udlån? Låneren vil få besked om, at udlånet er annulleret.";
+      }
+
       return "Tak fordi du deler din genstand med andre. Den er nu synlig for andre brugere, og du kan administrere den under 'Mine genstande'.";
     },
 
@@ -95,7 +106,10 @@ export default {
       if (this.dialogType === "account-created") {
         return "Gå til login";
       }
-      if (this.dialogType === "request-accepted") {
+      if (
+        this.dialogType === "request-accepted" ||
+        this.dialogType === "decline-request"
+      ) {
         return "Ok";
       }
       return "Gå til mine genstande";
@@ -149,7 +163,12 @@ export default {
         />
 
         <v-img
-          v-else-if="!isDelete && !isExit"
+          v-else-if="
+            !isDelete &&
+            !isExit &&
+            dialogType !== 'decline-request' &&
+            dialogType !== 'cancel-loan'
+          "
           :src="congratsIcon"
           contain
           max-width="50"
@@ -181,6 +200,33 @@ export default {
             "
           >
             Slet
+          </v-btn>
+        </v-card-actions>
+
+        <!-- CANCEL LOAN -->
+        <v-card-actions
+          v-else-if="dialogType === 'cancel-loan'"
+          class="justify-center mt-4 ga-3"
+        >
+          <v-btn
+            color="grey-darken-2"
+            style="font-weight: normal"
+            variant="flat"
+            @click="$emit('update:modelValue', false)"
+          >
+            Fortryd
+          </v-btn>
+
+          <v-btn
+            color="red-darken-1"
+            style="font-weight: normal"
+            variant="flat"
+            @click="
+              $emit('confirm-cancel-loan');
+              $emit('update:modelValue', false);
+            "
+          >
+            Ja, annuller udlån
           </v-btn>
         </v-card-actions>
 

@@ -1,6 +1,7 @@
 <script>
 import { loanService } from "@/services/loanService";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import RespondBox from "@/components/RespondBox.vue";
 export default {
   name: "RequestsPage",
   props: {
@@ -10,6 +11,7 @@ export default {
   },
   components: {
     ConfirmDialog,
+    RespondBox,
   },
   data() {
     return {
@@ -19,6 +21,8 @@ export default {
       filters: ["Afventende", "Igangværende", "Tidligere"],
       showDialog: false,
       dialogType: null,
+      showRespondBox: false,
+      selectedLoan: null,
     };
   },
   async mounted() {
@@ -50,7 +54,10 @@ export default {
 
       if (this.selectedFilter === "Tidligere") {
         return result.filter(
-          (loan) => loan.status === "Returneret" || loan.status === "Afvist",
+          (loan) =>
+            loan.status === "Returneret" ||
+            loan.status === "Afvist" ||
+            loan.status === "Annulleret",
         );
       }
 
@@ -69,7 +76,10 @@ export default {
           .length,
 
         Tidligere: userLoans.filter(
-          (loan) => loan.status === "Returneret" || loan.status === "Afvist",
+          (loan) =>
+            loan.status === "Returneret" ||
+            loan.status === "Afvist" ||
+            loan.status === "Annulleret",
         ).length,
       };
     },
@@ -119,6 +129,53 @@ export default {
       } catch (error) {
         console.error("Error accepting loan:", error);
       }
+    },
+    async declineLoan(loan) {
+      try {
+        await loanService.update(loan.id, {
+          ...loan,
+          status: "Afvist",
+        });
+
+        loan.status = "Afvist";
+
+        this.dialogType = "decline-request";
+        this.showDialog = true;
+
+        await this.fetchLoans();
+      } catch (error) {
+        console.error("Error declining loan:", error);
+      }
+    },
+    cancelLoan(loan) {
+      this.selectedLoan = loan;
+
+      this.dialogType = "cancel-loan";
+
+      this.showDialog = true;
+    },
+    async confirmCancelLoan() {
+      try {
+        await loanService.update(this.selectedLoan.id, {
+          ...this.selectedLoan,
+          status: "Annulleret",
+        });
+
+        this.selectedLoan.status = "Annulleret";
+
+        this.showDialog = false;
+
+        await this.fetchLoans();
+      } catch (error) {
+        console.error("Error cancelling loan:", error);
+      }
+    },
+    async suggestAlternative(loan) {
+      this.selectedLoan = loan;
+      this.showRespondBox = true;
+    },
+    async handleSuggestion(suggestionText) {
+      console.log("Received suggestion:", suggestionText);
     },
   },
   watch: {},
@@ -204,15 +261,19 @@ export default {
           color="grey-darken-4"
           style="font-weight: normal"
           class="ma-1 btn-actions"
+          @click="
+            loan.status === 'Godkendt' ? cancelLoan(loan) : declineLoan(loan)
+          "
         >
           <v-icon size="18" class="mr-1">mdi-close</v-icon>
-          Afvis
+          {{ loan.status === "Godkendt" ? "Anuller" : "Afvis" }}
         </v-btn>
 
         <v-btn
           color="grey-darken-4"
           style="font-weight: normal"
           class="ma-1 btn-actions"
+          @click="suggestAlternative(loan)"
         >
           <v-icon size="18" class="mr-1">mdi-lightbulb-outline</v-icon>
           Foreslå andet
@@ -230,7 +291,12 @@ export default {
         </v-btn>
       </div>
     </v-card>
-    <ConfirmDialog v-model="showDialog" :dialogType="dialogType" />
+    <ConfirmDialog
+      v-model="showDialog"
+      :dialogType="dialogType"
+      @confirm-cancel-loan="confirmCancelLoan"
+    />
+    <RespondBox v-model="showRespondBox" @send-suggestion="handleSuggestion" />
   </v-container>
 </template>
 
