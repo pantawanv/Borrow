@@ -1,5 +1,5 @@
 <script>
-import ItemPreviewCard from "./ItemPreviewCard.vue";
+import ItemPreviewCard from "@/components/ItemPreviewCard.vue";
 import { itemService } from "@/services/itemService.js";
 export default {
   name: "DiscoverPage",

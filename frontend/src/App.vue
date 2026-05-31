@@ -1,19 +1,19 @@
 <script>
-import Home from "@/components/Home.vue";
-import BasicInfo from "@/components/BasicInfo.vue";
+import Home from "@/views/Home.vue";
+import BasicInfo from "@/views/BasicInfo.vue";
 import Stepper from "@/components/Stepper.vue";
-import Details from "@/components/Details.vue";
-import ConfirmPage from "@/components/ConfirmPage.vue";
-import MyItems from "@/components/MyItems.vue";
-import ItemDetailsPage from "@/components/ItemDetailsPage.vue";
-import DiscoverPage from "@/components/DiscoverPage.vue";
+import Details from "@/views/Details.vue";
+import ConfirmPage from "@/views/ConfirmPage.vue";
+import MyItems from "@/views/MyItems.vue";
+import ItemDetailsPage from "@/views/ItemDetailsPage.vue";
+import DiscoverPage from "@/views/DiscoverPage.vue";
 import { itemService } from "@/services/itemService.js";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { imageService } from "@/services/imageService.js";
-import SendRequestPage from "@/components/SendRequestPage.vue";
-import RequestsPage from "@/components/RequestsPage.vue";
-import LoginPage from "@/components/LoginPage.vue";
-import RegisterPage from "@/components/RegisterPage.vue";
+import SendRequestPage from "@/views/SendRequestPage.vue";
+import RequestsPage from "@/views/RequestsPage.vue";
+import LoginPage from "@/views/LoginPage.vue";
+import RegisterPage from "@/views/RegisterPage.vue";
 import { auth } from "@/firebase";
 import { userService } from "@/services/userService.js";
 import {
@@ -21,7 +21,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import Profile from "@/components/Profile.vue";
+import Profile from "@/views/Profile.vue";
 import AppBar from "@/components/AppBar.vue";
 import { authService } from "@/services/authService";
 
