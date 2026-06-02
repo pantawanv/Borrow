@@ -34,7 +34,7 @@ export default {
           @click="$emit('go-to-discover')"
         >
           Find genstande
-          <v-icon size="18" class="ml-1">mdi-arrow-right</v-icon>
+          <v-icon size="18" class="ml-1">mdi-magnify</v-icon>
         </v-btn>
       </v-col>
       <v-col cols="12" md="auto">
