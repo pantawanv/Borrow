@@ -145,9 +145,8 @@ export default {
       <v-icon @click="openExitDialog">mdi-close</v-icon>
     </div>
     <h1>Anmod om at låne</h1>
-    <p>
-      Send en låneanmodning til (udlåner-navn) ved at udfylde felterne nedenfor.
-    </p>
+    <!-- TODO: Tilføj udlånerens navn -->
+    <p>Send en låneanmodning til udlåneren ved at udfylde felterne nedenfor.</p>
     <v-card class="item-preview">
       <div class="card-content">
         <div class="image-wrapper">
@@ -165,12 +164,16 @@ export default {
 
           <p class="pickup-info">
             📆Fortrukne afhentningsdage:
-            {{ availablePickupDays.map((day) => day.name).join(", ") }}
+            <span class="pickup-info-data">
+              {{ availablePickupDays.map((day) => day.name).join(", ") }}
+            </span>
           </p>
 
           <p class="pickup-info">
             ⏰Fortrukne afhentningstider:
-            {{ availablePickupTimes.map((time) => time.name).join(", ") }}
+            <span class="pickup-info-data">
+              {{ availablePickupTimes.map((time) => time.name).join(", ") }}
+            </span>
           </p>
         </div>
       </div>
@@ -326,6 +329,10 @@ export default {
   margin: 2px 0;
   font-size: 13px;
   color: #9e9e9e;
+}
+
+.pickup-info-data {
+  color: #66bb6a;
 }
 
 .title-text {

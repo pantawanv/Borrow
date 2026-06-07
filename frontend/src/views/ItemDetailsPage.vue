@@ -146,8 +146,9 @@ export default {
       <v-card-subtitle class="item-subtitle pa-0">{{
         item.brand
       }}</v-card-subtitle>
+      <!--  Indsæt rigtigt antal udlån i stedet for hardcoded tekst -->
       <v-card-subtitle class="item-subtitle pa-0"
-        >Antal Gange Udlånt: // TODO</v-card-subtitle
+        >Antal Gange Udlånt: 8 gange</v-card-subtitle
       >
       <v-divider class="my-2" />
       <div class="info-list">

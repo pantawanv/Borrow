@@ -68,7 +68,7 @@ export default {
 
       <v-btn
         @click="$emit('delete-item', item.id)"
-        color="#2a2a2a"
+        color="red-darken-1"
         class="delete-btn"
         style="font-weight: normal"
       >
@@ -116,5 +116,10 @@ export default {
 
 .select-status :deep(.v-field) {
   background-color: #2a2a2a;
+}
+
+.save-status-btn:disabled {
+  cursor: not-allowed !important;
+  pointer-events: auto !important;
 }
 </style>

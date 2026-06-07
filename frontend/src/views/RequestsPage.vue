@@ -285,7 +285,7 @@ export default {
         </v-btn>
 
         <v-btn
-          color="grey-darken-4"
+          color="red-darken-1"
           style="font-weight: normal"
           class="ma-1 btn-actions"
           @click="
