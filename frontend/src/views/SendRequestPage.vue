@@ -240,6 +240,12 @@ export default {
     <h4 id="item-message-label" class="title-text">
       Din besked til udlåneren *
     </h4>
+    <v-card class="tip-card mb-2">
+      <v-card-text class="text-tip">
+        <v-icon left color="yellow-darken-2">mdi-lightbulb-on</v-icon>
+        Tip: Her kan du bl.a. angive et præcist klokkeslæt for afhentning.
+      </v-card-text>
+    </v-card>
     <div v-if="errors.message" class="error-text">
       {{ errors.message }}
     </div>
@@ -364,5 +370,16 @@ export default {
   font-size: 14px;
   margin-top: -16px;
   margin-bottom: 8px;
+}
+
+.text-tip {
+  color: white;
+  font-style: italic;
+}
+
+.tip-card {
+  background-color: #424242;
+  border-radius: 16px;
+  margin-top: 16px;
 }
 </style>

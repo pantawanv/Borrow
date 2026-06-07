@@ -105,6 +105,15 @@ export default {
       Tilføj ekstra oplysninger om genstanden og ønskede afhentningstider
     </p>
     <p class="text-extra-info">Felter markeret med * er påkrævet</p>
+    <!-- Tip -->
+    <v-card class="tip-card">
+      <v-card-text class="text-tip">
+        <v-icon left color="yellow-darken-2">mdi-lightbulb-on</v-icon>
+        Tip: At angive klare afhentningspræferencer reducerer frem og
+        tilbage-beskeder og gør det nemmere for både dig og låneren at finde et
+        passende afhentningstidspunkt.
+      </v-card-text>
+    </v-card>
 
     <v-divider class="my-4"></v-divider>
 
@@ -174,16 +183,6 @@ export default {
       rows="4"
     />
 
-    <!-- Tip -->
-    <v-card>
-      <v-card-text class="text-tip">
-        <v-icon left color="yellow-darken-2">mdi-lightbulb-on</v-icon>
-        Tip: At angive klare afhentningspræferencer reducerer frem og
-        tilbage-beskeder og gør det nemmere for både dig og låneren at finde et
-        passende afhentningstidspunkt.
-      </v-card-text>
-    </v-card>
-
     <!-- Back and next buttons  -->
     <div class="bottom-bar">
       <v-row justify="center" align="center">
@@ -233,10 +232,19 @@ export default {
   margin: 0;
 }
 
-.text-extra-info,
-.text-tip {
+.text-extra-info {
   color: #757575;
   font-style: italic;
+}
+.text-tip {
+  color: white;
+  font-style: italic;
+}
+
+.tip-card {
+  background-color: #424242;
+  border-radius: 16px;
+  margin-top: 16px;
 }
 
 .title-label {

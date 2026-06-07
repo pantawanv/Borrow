@@ -177,6 +177,13 @@ export default {
 
     <p class="text-guide">Udfyld venligst oplysninger om genstanden</p>
     <p class="text-required">Felter markeret med * er påkrævet</p>
+    <v-card class="tip-card">
+      <v-card-text class="text-tip">
+        <v-icon left color="yellow-darken-2">mdi-lightbulb-on</v-icon>
+        Tip: Vær specifik: type, drivkilde, størrelse. Det hjælper andre med at
+        finde det rigtige.
+      </v-card-text>
+    </v-card>
 
     <v-divider class="my-4"></v-divider>
 
@@ -270,7 +277,7 @@ export default {
     <v-textarea
       v-model="itemForm.description"
       aria-labelledby="item-description-label"
-      placeholder="Beskriv genstanden, og evt. om den kommer med ekstra tilbehør."
+      placeholder="Beskriv genstanden - gerne effekt, strømkilde, tilbehør, størrelse, type..."
       rounded="lg"
       density="compact"
       variant="solo"
@@ -474,5 +481,16 @@ export default {
   .page-container {
     max-width: 800px;
   }
+}
+
+.text-tip {
+  color: white;
+  font-style: italic;
+}
+
+.tip-card {
+  background-color: #424242;
+  border-radius: 16px;
+  margin-top: 16px;
 }
 </style>
